@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         invite_code_ET = findViewById(R.id.invite_code_ET);
         btn_sbmt = findViewById(R.id.btn_sbmt);
         Result_TV = findViewById(R.id.RESULT_TV);
-        goNewView();
         btn_sbmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -44,10 +44,25 @@ import com.example.prototype_therminal.model.POST_PHOTO;
 
 import com.google.gson.GsonBuilder;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.HOGDescriptor;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -73,6 +88,8 @@ public class Photo extends AppCompatActivity {
     private String RESULT_FROM_POST;
     private String MSG_FROM_POST;
 
+    private CascadeClassifier cascadeClassifier;
+
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler = null;
 
@@ -93,6 +110,8 @@ public class Photo extends AppCompatActivity {
          id = getIntent().getStringExtra("id");
          RESULT_TV = findViewById(R.id.TV_RESULT);
          RESULT_TV.setText("a");
+
+
 
 
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
@@ -147,7 +166,107 @@ public class Photo extends AppCompatActivity {
 
 
 
-    private void startBackgroundThread() {
+    public class FaceRtspUtil {
+
+        private static final String TAG = "FaceUtil";
+        private Mat grayscaleImage;
+        private CascadeClassifier cascadeClassifier = null;
+
+        public FaceRtspUtil(CascadeClassifier cascadeClassifier, int width, int height) {
+            this.cascadeClassifier = cascadeClassifier;
+            // Ширина и высота лица должны быть не менее 10% от высоты исходного изображения
+            grayscaleImage = new Mat(height, width, CvType.CV_8UC4);
+        }
+
+
+
+        public boolean detectFrame2(Bitmap oldBitmap) {
+            Mat aInputFrame = new Mat();
+            if (oldBitmap == null) {
+                return false;
+            }
+            Utils.bitmapToMat(oldBitmap, aInputFrame);
+            if (grayscaleImage == null) {
+                Log.i(TAG, "detectFrame: aInputFrame == null || grayscaleImage == null");
+                return false;
+            }
+            Imgproc.cvtColor(aInputFrame, grayscaleImage, Imgproc.COLOR_RGBA2RGB);
+
+            MatOfRect faces = new MatOfRect();
+
+            // Используем каскадный классификатор для обнаружения объектов
+            if (cascadeClassifier != null) {
+                // Не получаем объекты ниже 60 * 60
+                cascadeClassifier.detectMultiScale(grayscaleImage, faces, 1.1, 2, 2 , new Size(60, 60), new Size());
+            }
+            // Положение и размеры всех обнаруженных лиц сохраняются в facesArray
+            Rect[] facesArray = faces.toArray();
+            if (facesArray == null || facesArray.length == 0) {
+                // Если лица нет, просто выходим
+                Log.i (TAG, "detectFrame: на картинке нет лица");
+                return false;
+            }else{
+                Log.i (TAG, "detectFrame: OK! Лицо обнаружено");
+                return true;
+            }
+        }
+
+    }
+
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    initializeOpenCVDependencies();
+                    break;
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+        }
+    };
+
+
+//TODO initialize OpenCVDependencies
+
+    private void initializeOpenCVDependencies() {
+        try {
+            InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt2);
+            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+//           File mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface.xml");
+            File mCascadeFile = new File(cascadeDir, "haarcascade_frontalface_alt2.xml");
+            FileOutputStream os = new FileOutputStream(mCascadeFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+
+            // Load the cascade classifier
+            CascadeClassifier cascadeClassifier = new CascadeClassifier(mCascadeFile.getAbsolutePath());
+
+            if (cascadeClassifier.empty()) {
+                Log.e("initializeOpenCVDependencies : ", "Failed to load cascade classifier");
+                cascadeDir = null;
+            } else{
+                Log.i("initializeOpenCVDependencies : ", "Loaded cascade classifier from " + mCascadeFile.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
+            Log.e("OpenCVActivity", "Error loading cascade", e);
+        }}
+//        openCvCameraView.enableView();
+
+
+
+
+
+        private void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
@@ -274,6 +393,19 @@ public class Photo extends AppCompatActivity {
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
                 Bitmap bm = BitmapFactory.decodeFile(mFile.getPath());
+                //TODO//////////FACE///////////////
+                InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt2);
+                File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+                File mCascadeFile = new File(cascadeDir, "haarcascade_frontalface_alt2.xml");
+                CascadeClassifier cascadeClassifier = new CascadeClassifier(mCascadeFile.getAbsolutePath());
+                FaceRtspUtil mFaceUtili = new FaceRtspUtil(cascadeClassifier, 1920, 1080);
+                boolean hasFace = mFaceUtili.detectFrame2(bm);
+                if(!hasFace){
+                    throw new Error("NO FACES DETECTED") ;
+                }
+
+
+                ////////////////CLOSE FACE////////////////
 
 
                 ByteArrayOutputStream bOut = new ByteArrayOutputStream();
@@ -283,11 +415,9 @@ public class Photo extends AppCompatActivity {
                 Log.i(LOG_TAG, "---------Base64________"+base64Image);
                 runOnUiThread(() -> {
                     img64 = base64Image;
-                    id="11";
-                    name="igor";
-//                    POST_img64(id, img64, name);
+                    POST_img64(id, img64, name);
                     RESULT_TV.setTextColor(Color.parseColor("#32a852"));
-                    RESULT_TV.setText("Отправилось на сервер");
+                    RESULT_TV.setText(RESULT_FROM_POST);
                 });
 
 
@@ -465,9 +595,11 @@ public class Photo extends AppCompatActivity {
         stopBackgroundThread();
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this, mLoaderCallback);
         startBackgroundThread();
     }
 
