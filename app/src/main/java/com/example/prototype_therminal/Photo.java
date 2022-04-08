@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
@@ -27,8 +28,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -38,6 +41,7 @@ import android.widget.Toast;
 
 import com.example.prototype_therminal.data.POST_API;
 import com.example.prototype_therminal.model.POST_PHOTO;
+
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
@@ -58,6 +62,7 @@ public class Photo extends AppCompatActivity {
 
     public static final String APP_TAG = "retrofit-json-variable";
     public static final String LOG_TAG = "Camera";
+    public static final String FACE_TAG = "FACE_DETECTION";
 
     private TextureView camera_view = null;
     private Button btn_take_photo;
@@ -65,6 +70,8 @@ public class Photo extends AppCompatActivity {
     private String id;
     private String img64;
     private TextView RESULT_TV;
+    private String RESULT_FROM_POST;
+    private String MSG_FROM_POST;
 
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler = null;
@@ -120,7 +127,13 @@ public class Photo extends AppCompatActivity {
         btn_take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myCameras[CAMERA2].isOpen()) myCameras[CAMERA2].makePhoto();
+                if (myCameras[CAMERA2].isOpen()){
+                    myCameras[CAMERA2].makePhoto();
+                }
+                else{
+                    myCameras[CAMERA2].openCamera();
+                    myCameras[CAMERA2].makePhoto();
+                }
 
 
 
@@ -177,19 +190,37 @@ public class Photo extends AppCompatActivity {
                         String msg = (String) data_get.get(1);
                         Log.w(APP_TAG, "onResponse| response: " + "Result: " + RESULT+" msg: " + msg);
                         runOnUiThread(() -> {
-                            ////////////////////////////
+                            RESULT_FROM_POST = RESULT;
+                            MSG_FROM_POST = msg;
+
                         });
+
                     } else {
                         Log.e(APP_TAG, "onResponse | status: " + statusCode);
+                        runOnUiThread(() -> {
+                            RESULT_FROM_POST = "ERROR";
+                            MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
+
+                        });
                     }
                 } catch (Exception e) {
                     Log.e(APP_TAG, "onResponse | exception", e);
+                    runOnUiThread(() -> {
+                        RESULT_FROM_POST = "ERROR";
+                        MSG_FROM_POST = "ВНУТРЕННЯЯ ОШИБКА";
+
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<POST_PHOTO> call, Throwable t) {
                 Log.e(APP_TAG, "onFailure", t);
+                runOnUiThread(() -> {
+                    RESULT_FROM_POST = "ERROR";
+                    MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
+
+                });
             }
         });
     } //POST
@@ -234,6 +265,7 @@ public class Photo extends AppCompatActivity {
 
         @Override
         public void run() {
+
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
@@ -242,6 +274,8 @@ public class Photo extends AppCompatActivity {
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
                 Bitmap bm = BitmapFactory.decodeFile(mFile.getPath());
+
+
                 ByteArrayOutputStream bOut = new ByteArrayOutputStream();
                 rotateBitmap(bm, mFile.getPath());
                 bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
@@ -251,8 +285,9 @@ public class Photo extends AppCompatActivity {
                     img64 = base64Image;
                     id="11";
                     name="igor";
-                    POST_img64(id, img64, name);
-                    Toast.makeText(Photo.this,"Photo sent", Toast.LENGTH_SHORT).show();
+//                    POST_img64(id, img64, name);
+                    RESULT_TV.setTextColor(Color.parseColor("#32a852"));
+                    RESULT_TV.setText("Отправилось на сервер");
                 });
 
 
@@ -260,6 +295,10 @@ public class Photo extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                runOnUiThread(() -> {
+                    RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                    RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
+                });
             } finally {
                 mImage.close();
                 if (null != output) {
@@ -267,6 +306,10 @@ public class Photo extends AppCompatActivity {
                         output.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        runOnUiThread(() -> {
+                            RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                            RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
+                        });
                     }
                 }
             }
@@ -409,9 +452,9 @@ public class Photo extends AppCompatActivity {
             @Override
             public void onImageAvailable(ImageReader reader) {
 
-                { mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
-                    Log.i(LOG_TAG, "Path"+mFile.getPath());
-                    Toast.makeText(Photo.this,""+mFile.length(), Toast.LENGTH_SHORT).show();}
+                 mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+//                    Log.i(LOG_TAG, "Path"+mFile.getPath());
+//                    Toast.makeText(Photo.this,""+mFile.length(), Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -427,6 +470,8 @@ public class Photo extends AppCompatActivity {
         super.onResume();
         startBackgroundThread();
     }
+
+
 
 
 
