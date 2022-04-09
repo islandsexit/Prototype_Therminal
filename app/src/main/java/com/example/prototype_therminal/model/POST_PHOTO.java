@@ -5,8 +5,8 @@ import java.util.List;
 
 public class POST_PHOTO {
 
-    private String result;
-    private String msg;
+    private String RESULT;
+    private String DESC;
     private String ID;
     private String img64;
     private String name;
@@ -15,26 +15,39 @@ public class POST_PHOTO {
     public POST_PHOTO() {
     }
 
+    public void setMsg(String msg) {
+        this.DESC = msg;
+    }
+
+    public void setRESULT(String RESULT) {
+        this.RESULT = RESULT;
+    }
+
     public String getId() {
         return ID;
     }
 
     public void setId(String result) {
-        this.result = result;
+        this.RESULT = result;
     }
 
+    public String getMsg() {
+        return DESC;
+    }
 
-
-
+    public String getRESULT() {
+        return RESULT;
+    }
     /*public Map<String, Object> getAddress() {
         return address;
     }*/
 
     public List getResponse() {
 
-        List response = new ArrayList<>();
-        response.add(result);
-        response.add(msg);
+
+        List<Object> response = new ArrayList<>();
+        response.add(RESULT);
+        response.add(DESC);
 
         return response;
     }
@@ -46,13 +59,13 @@ public class POST_PHOTO {
 //    public void setAddress(String address) {
 //        this.code = address;
 //    }
-//
-//    @Override
-//    public String toString() {
-//        return "Profile{" +
-//                "RESULT='" + RESULT + '\'' +
-//                ", code='" + code + '\'' +
-//                '}';
-//    }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "RESULT='" + RESULT + '\'' +
+                ", msg='" + DESC + '\'' +
+                '}';
+    }
 
 }

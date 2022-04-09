@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private String name_txt;
     private String id_txt;
     private TextView Result_TV;
+    private Boolean debag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
         invite_code_ET = findViewById(R.id.invite_code_ET);
         btn_sbmt = findViewById(R.id.btn_sbmt);
         Result_TV = findViewById(R.id.RESULT_TV);
+        if(debag == true){
+            name_txt = "Test";
+            id_txt = "81";
+            goNewView();
+        }
         btn_sbmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

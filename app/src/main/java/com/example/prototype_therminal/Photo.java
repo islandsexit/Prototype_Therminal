@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,16 +29,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.prototype_therminal.data.POST_API;
 import com.example.prototype_therminal.model.POST_PHOTO;
@@ -50,13 +48,11 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.objdetect.HOGDescriptor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -180,15 +176,15 @@ public class Photo extends AppCompatActivity {
 
 
 
-        public boolean detectFrame2(Bitmap oldBitmap) {
+        public Rect[] detectFrame2(Bitmap oldBitmap) {
             Mat aInputFrame = new Mat();
             if (oldBitmap == null) {
-                return false;
+                return null;
             }
             Utils.bitmapToMat(oldBitmap, aInputFrame);
             if (grayscaleImage == null) {
                 Log.i(TAG, "detectFrame: aInputFrame == null || grayscaleImage == null");
-                return false;
+                return null;
             }
             Imgproc.cvtColor(aInputFrame, grayscaleImage, Imgproc.COLOR_RGBA2RGB);
 
@@ -204,10 +200,10 @@ public class Photo extends AppCompatActivity {
             if (facesArray == null || facesArray.length == 0) {
                 // Если лица нет, просто выходим
                 Log.i (TAG, "detectFrame: на картинке нет лица");
-                return false;
+                return null;
             }else{
                 Log.i (TAG, "detectFrame: OK! Лицо обнаружено");
-                return true;
+                return facesArray;
             }
         }
 
@@ -283,13 +279,13 @@ public class Photo extends AppCompatActivity {
         }
     }
 
-
+    //TODO POST_IMG_64
     private void POST_img64(String ID, String img64, String name) {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.48.114:8080")
+                .baseUrl("http://192.168.48.174:8080")
                 .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .build();
 
@@ -309,8 +305,25 @@ public class Photo extends AppCompatActivity {
                         String msg = (String) data_get.get(1);
                         Log.w(APP_TAG, "onResponse| response: " + "Result: " + RESULT+" msg: " + msg);
                         runOnUiThread(() -> {
-                            RESULT_FROM_POST = RESULT;
-                            MSG_FROM_POST = msg;
+
+
+                            RESULT_FROM_POST = POST_PHOTO.getRESULT();
+                            MSG_FROM_POST = POST_PHOTO.getMsg();
+                            if(RESULT_FROM_POST == "SUCCESS"){
+                                RESULT_TV.setTextColor(Color.parseColor("#32a852"));
+                                Handler handler_new_view = new Handler();
+                                handler_new_view.postDelayed(new Runnable() {
+                                    public void run() {
+                                        goNewView();
+                                    }
+                                }, 3000);
+                            }
+                            else {
+                                myCameras[CAMERA2].openCamera();
+                                RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                            }
+                            RESULT_TV.setText(MSG_FROM_POST);
+
 
                         });
 
@@ -319,6 +332,9 @@ public class Photo extends AppCompatActivity {
                         runOnUiThread(() -> {
                             RESULT_FROM_POST = "ERROR";
                             MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
+                            RESULT_TV.setText(MSG_FROM_POST);
+                            RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                            myCameras[CAMERA2].openCamera();
 
                         });
                     }
@@ -327,6 +343,9 @@ public class Photo extends AppCompatActivity {
                     runOnUiThread(() -> {
                         RESULT_FROM_POST = "ERROR";
                         MSG_FROM_POST = "ВНУТРЕННЯЯ ОШИБКА";
+                        myCameras[CAMERA2].openCamera();
+                        RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                        RESULT_TV.setText(MSG_FROM_POST);
 
                     });
                 }
@@ -338,6 +357,9 @@ public class Photo extends AppCompatActivity {
                 runOnUiThread(() -> {
                     RESULT_FROM_POST = "ERROR";
                     MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
+                    myCameras[CAMERA2].openCamera();
+                    RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                    RESULT_TV.setText(MSG_FROM_POST);
 
                 });
             }
@@ -399,26 +421,36 @@ public class Photo extends AppCompatActivity {
                 File mCascadeFile = new File(cascadeDir, "haarcascade_frontalface_alt2.xml");
                 CascadeClassifier cascadeClassifier = new CascadeClassifier(mCascadeFile.getAbsolutePath());
                 FaceRtspUtil mFaceUtili = new FaceRtspUtil(cascadeClassifier, 1920, 1080);
-                boolean hasFace = mFaceUtili.detectFrame2(bm);
-                if(!hasFace){
-                    throw new Error("NO FACES DETECTED") ;
+                Rect[] hasFace = mFaceUtili.detectFrame2(bm);
+                if(hasFace==null){
+                    runOnUiThread(() -> {
+                        RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+                        RESULT_TV.setText("На фото нет лица, или попало болшьше одного лица на фото");
+                        myCameras[CAMERA2].openCamera();
+                    });
+
+
+                }
+               else {
+                   Log.e(APP_TAG,""+hasFace[0].x+" "+ hasFace[0].y +" "+  hasFace[0].width+" "+  hasFace[0].height);
+//                    bm = Bitmap.createBitmap(bm, hasFace[0].x,hasFace[0].y , hasFace[0].width, hasFace[0].height);
+                    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+                    rotateBitmap(bm, mFile.getPath());
+                    bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
+                    String base64Image = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);//////////////Вот тут теперь ифыу 64 фотка
+                    Log.i(LOG_TAG, "---------Base64________"+base64Image);
+                    runOnUiThread(() -> {
+                        RESULT_TV.setText("Отправляю фото ");
+                        img64 = base64Image;
+                        POST_img64(id, img64, name);
+
+
+                    });
                 }
 
 
                 ////////////////CLOSE FACE////////////////
 
-
-                ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-                rotateBitmap(bm, mFile.getPath());
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
-                String base64Image = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);//////////////Вот тут теперь ифыу 64 фотка
-                Log.i(LOG_TAG, "---------Base64________"+base64Image);
-                runOnUiThread(() -> {
-                    img64 = base64Image;
-                    POST_img64(id, img64, name);
-                    RESULT_TV.setTextColor(Color.parseColor("#32a852"));
-                    RESULT_TV.setText(RESULT_FROM_POST);
-                });
 
 
 
@@ -471,9 +503,14 @@ public class Photo extends AppCompatActivity {
             public void onOpened(CameraDevice camera) {
                 mCameraDevice = camera;
                 Log.i(LOG_TAG, "Open camera  with id:"+mCameraDevice.getId());
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        createCameraPreviewSession();
+                    }
+                }, 1000);
 
 
-                createCameraPreviewSession();
             }
 
             @Override
@@ -519,7 +556,7 @@ public class Photo extends AppCompatActivity {
 
             mImageReader = ImageReader.newInstance(1920,1080, ImageFormat.JPEG,1); //размер фотки
             mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, null);
-
+            camera_view = findViewById(R.id.camera_viev);
             SurfaceTexture texture = camera_view.getSurfaceTexture();
             Surface surface = new Surface(texture);
 
@@ -604,16 +641,24 @@ public class Photo extends AppCompatActivity {
     }
 
 
+    public void goNewView(){
 
+        // Говорим между какими Activity будет происходить связь
+        Intent intent = new Intent(this, MainActivity.class);
 
-
-
-
-
-
-
-
-
-
-
+        // показываем новое Activity
+        startActivity(intent);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
