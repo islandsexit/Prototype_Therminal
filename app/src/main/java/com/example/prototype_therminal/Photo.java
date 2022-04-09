@@ -84,6 +84,8 @@ public class Photo extends AppCompatActivity {
     private String RESULT_FROM_POST;
     private String MSG_FROM_POST;
 
+    private Button btn_home;
+
     private CascadeClassifier cascadeClassifier;
 
     private HandlerThread mBackgroundThread;
@@ -105,7 +107,17 @@ public class Photo extends AppCompatActivity {
          name = getIntent().getStringExtra("name");
          id = getIntent().getStringExtra("id");
          RESULT_TV = findViewById(R.id.TV_RESULT);
-         RESULT_TV.setText("a");
+
+
+         btn_home = findViewById(R.id.btn_home);
+         btn_home.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 goNewView();
+             }
+         });
+
+         RESULT_TV.setText("Пожалуйста сделайте фото своего лица");
 
 
 
@@ -142,12 +154,17 @@ public class Photo extends AppCompatActivity {
         btn_take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RESULT_TV.setText("Подождите");
                 if (myCameras[CAMERA2].isOpen()){
                     myCameras[CAMERA2].makePhoto();
+                    btn_take_photo.setClickable(false);
+                    RESULT_TV.setTextColor(Color.parseColor("gray"));
                 }
                 else{
                     myCameras[CAMERA2].openCamera();
                     myCameras[CAMERA2].makePhoto();
+                    btn_take_photo.setClickable(false);
+                    RESULT_TV.setTextColor(Color.parseColor("gray"));
                 }
 
 
@@ -285,7 +302,7 @@ public class Photo extends AppCompatActivity {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.48.174:8080")
+                .baseUrl("http://192.168.48.114:8080")
                 .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .build();
 
@@ -425,18 +442,23 @@ public class Photo extends AppCompatActivity {
                 if(hasFace==null){
                     runOnUiThread(() -> {
                         RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
-                        RESULT_TV.setText("На фото нет лица, или попало болшьше одного лица на фото");
+                        RESULT_TV.setText("На фото нет лица, или попало более одного лица на фото");
                         myCameras[CAMERA2].openCamera();
+                        btn_take_photo.setClickable(true);
                     });
 
 
                 }
                else {
                    Log.e(APP_TAG,""+hasFace[0].x+" "+ hasFace[0].y +" "+  hasFace[0].width+" "+  hasFace[0].height);
-//                    bm = Bitmap.createBitmap(bm, hasFace[0].x,hasFace[0].y , hasFace[0].width, hasFace[0].height);
+                    int height_face_1_3=hasFace[0].height/3;
+                    int height_face_1_6 = hasFace[0].height / 6;
+                    int weight_face_1_6=hasFace[0].width/6;
+
+                    bm = Bitmap.createBitmap(bm, hasFace[0].x-weight_face_1_6,hasFace[0].y-height_face_1_3 , hasFace[0].width+weight_face_1_6, hasFace[0].height+height_face_1_3);
                     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
                     rotateBitmap(bm, mFile.getPath());
-                    bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
                     String base64Image = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);//////////////Вот тут теперь ифыу 64 фотка
                     Log.i(LOG_TAG, "---------Base64________"+base64Image);
                     runOnUiThread(() -> {
@@ -460,6 +482,7 @@ public class Photo extends AppCompatActivity {
                 runOnUiThread(() -> {
                     RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                     RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
+                    btn_take_photo.setClickable(true);
                 });
             } finally {
                 mImage.close();
@@ -471,6 +494,7 @@ public class Photo extends AppCompatActivity {
                         runOnUiThread(() -> {
                             RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                             RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
+                            btn_take_photo.setClickable(true);
                         });
                     }
                 }
@@ -508,7 +532,7 @@ public class Photo extends AppCompatActivity {
                     public void run() {
                         createCameraPreviewSession();
                     }
-                }, 1000);
+                }, 500);
 
 
             }
