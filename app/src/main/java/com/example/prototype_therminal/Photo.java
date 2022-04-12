@@ -155,6 +155,8 @@ public class Photo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RESULT_TV.setText("Подождите");
+                btn_take_photo.setClickable(false);
+                btn_home.setClickable(false);
                 if (myCameras[CAMERA2].isOpen()){
                     myCameras[CAMERA2].makePhoto();
                     btn_take_photo.setClickable(false);
@@ -173,7 +175,20 @@ public class Photo extends AppCompatActivity {
             }
         });
 
+        camera_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                camera_view.setClickable(false);
+                Handler hand_timer = new Handler();
+                hand_timer.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        camera_view.setClickable(true);
+                    }
+                }, 3000);
+            }
+        });
     }
 
 
@@ -321,13 +336,13 @@ public class Photo extends AppCompatActivity {
                         String RESULT = (String) data_get.get(0);
                         String msg = (String) data_get.get(1);
                         Log.w(APP_TAG, "onResponse| response: " + "Result: " + RESULT+" msg: " + msg);
+
+                        RESULT_FROM_POST = POST_PHOTO.getRESULT();
+                        MSG_FROM_POST = POST_PHOTO.getMsg();
+
                         runOnUiThread(() -> {
-
-
-                            RESULT_FROM_POST = POST_PHOTO.getRESULT();
-                            MSG_FROM_POST = POST_PHOTO.getMsg();
-                            if(RESULT_FROM_POST == "SUCCESS"){
-                                RESULT_TV.setTextColor(Color.parseColor("#32a852"));
+                            if(RESULT_FROM_POST.equals("SUCCESS")){
+                                RESULT_TV.setTextColor(Color.parseColor("green"));
                                 Handler handler_new_view = new Handler();
                                 handler_new_view.postDelayed(new Runnable() {
                                     public void run() {
@@ -336,8 +351,10 @@ public class Photo extends AppCompatActivity {
                                 }, 3000);
                             }
                             else {
-                                myCameras[CAMERA2].openCamera();
-                                RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
+
+                                RESULT_TV.setTextColor(Color.parseColor("red"));
+                                btn_take_photo.setClickable(true);
+                                btn_home.setClickable(true);
                             }
                             RESULT_TV.setText(MSG_FROM_POST);
 
@@ -351,7 +368,10 @@ public class Photo extends AppCompatActivity {
                             MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
                             RESULT_TV.setText(MSG_FROM_POST);
                             RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
-                            myCameras[CAMERA2].openCamera();
+
+                            btn_take_photo.setClickable(true);
+                            btn_home.setClickable(true);
+
 
                         });
                     }
@@ -360,9 +380,11 @@ public class Photo extends AppCompatActivity {
                     runOnUiThread(() -> {
                         RESULT_FROM_POST = "ERROR";
                         MSG_FROM_POST = "ВНУТРЕННЯЯ ОШИБКА";
-                        myCameras[CAMERA2].openCamera();
+
                         RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                         RESULT_TV.setText(MSG_FROM_POST);
+                        btn_take_photo.setClickable(true);
+                        btn_home.setClickable(true);
 
                     });
                 }
@@ -374,9 +396,11 @@ public class Photo extends AppCompatActivity {
                 runOnUiThread(() -> {
                     RESULT_FROM_POST = "ERROR";
                     MSG_FROM_POST = "ОШИБКА СЕРВЕРА";
-                    myCameras[CAMERA2].openCamera();
+
                     RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                     RESULT_TV.setText(MSG_FROM_POST);
+                    btn_take_photo.setClickable(true);
+                    btn_home.setClickable(true);
 
                 });
             }
@@ -432,6 +456,7 @@ public class Photo extends AppCompatActivity {
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
                 Bitmap bm = BitmapFactory.decodeFile(mFile.getPath());
+                rotateBitmap(bm, mFile.getPath());
                 //TODO//////////FACE///////////////
                 InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt2);
                 File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
@@ -443,28 +468,39 @@ public class Photo extends AppCompatActivity {
                     runOnUiThread(() -> {
                         RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                         RESULT_TV.setText("На фото нет лица, или попало более одного лица на фото");
-                        myCameras[CAMERA2].openCamera();
+
                         btn_take_photo.setClickable(true);
+                        btn_home.setClickable(true);
                     });
 
 
                 }
                else {
-                   Log.e(APP_TAG,""+hasFace[0].x+" "+ hasFace[0].y +" "+  hasFace[0].width+" "+  hasFace[0].height);
+                   Log.e(APP_TAG,"x:"+hasFace[0].x+" y:"+ hasFace[0].y +" width:"+  hasFace[0].width+" height"+  hasFace[0].height);
                     int height_face_1_3=hasFace[0].height/3;
+                    int height_face_1_2=hasFace[0].height/2;
                     int height_face_1_6 = hasFace[0].height / 6;
                     int weight_face_1_6=hasFace[0].width/6;
+                    if(hasFace[0].y-height_face_1_3 + hasFace[0].height+height_face_1_2 <=bm.getHeight()){
+                        bm = Bitmap.createBitmap(bm, hasFace[0].x-weight_face_1_6,hasFace[0].y-height_face_1_3 , hasFace[0].width+weight_face_1_6, hasFace[0].height+height_face_1_2);
+                    }
 
-                    bm = Bitmap.createBitmap(bm, hasFace[0].x-weight_face_1_6,hasFace[0].y-height_face_1_3 , hasFace[0].width+weight_face_1_6, hasFace[0].height+height_face_1_3);
                     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-                    rotateBitmap(bm, mFile.getPath());
+
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
+
+                     File mFile2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "test2.jpg");
+                    FileOutputStream fos = null;
+                    fos = new FileOutputStream(mFile2);
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
                     String base64Image = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);//////////////Вот тут теперь ифыу 64 фотка
                     Log.i(LOG_TAG, "---------Base64________"+base64Image);
                     runOnUiThread(() -> {
                         RESULT_TV.setText("Отправляю фото ");
                         img64 = base64Image;
                         POST_img64(id, img64, name);
+
 
 
                     });
@@ -483,6 +519,7 @@ public class Photo extends AppCompatActivity {
                     RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                     RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
                     btn_take_photo.setClickable(true);
+                    btn_home.setClickable(true);
                 });
             } finally {
                 mImage.close();
@@ -495,6 +532,7 @@ public class Photo extends AppCompatActivity {
                             RESULT_TV.setTextColor(Color.parseColor("#eb4034"));
                             RESULT_TV.setText("ОШИБКА ПРИЛОЖЕНИЯ");
                             btn_take_photo.setClickable(true);
+                            btn_home.setClickable(true);
                         });
                     }
                 }
@@ -628,8 +666,8 @@ public class Photo extends AppCompatActivity {
                     }
                 };
 
-                mCaptureSession.stopRepeating();
-                mCaptureSession.abortCaptures();
+//                mCaptureSession.stopRepeating();
+//                mCaptureSession.abortCaptures();
                 mCaptureSession.capture(captureBuilder.build(), CaptureCallback, mBackgroundHandler);
             }
             catch (CameraAccessException e) {

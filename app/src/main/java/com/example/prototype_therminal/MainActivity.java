@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,12 +57,19 @@ public class MainActivity extends AppCompatActivity {
     private String name_txt;
     private String id_txt;
     private TextView Result_TV;
-    private Boolean debag = true;
+    private Boolean debag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+        ///getWindow().addFlags(WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY);
+
+
         invite_code_ET = findViewById(R.id.invite_code_ET);
         invite_code_ET1 = findViewById(R.id.invite_code_ET1);
         invite_code_ET2 = findViewById(R.id.invite_code_ET2);
@@ -94,26 +103,33 @@ public class MainActivity extends AppCompatActivity {
         btn_sbmt.setClickable(true);
 
 
+
         btn_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_1.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_1.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_1.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_1.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_1.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_1.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -122,21 +138,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_2.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_2.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_2.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_2.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_2.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_2.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -145,21 +167,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_3.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_3.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_3.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_3.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_3.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_3.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -168,21 +196,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_4.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_4.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_4.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_4.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_4.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_4.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -191,21 +225,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_5.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_5.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_5.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_5.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_5.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_5.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -214,21 +254,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_6.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_6.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_6.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_6.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_6.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_6.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -237,21 +283,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_7.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_7.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_7.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_7.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_7.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_7.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -260,21 +312,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_8.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_8.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_8.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_8.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_8.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_8.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -283,21 +341,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_9.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_9.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
                     invite_code_ET2.setText(btn_9.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_9.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_9.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_9.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -306,21 +370,28 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_0.getText().toString());
+                    check_nums();
+
                 }
                 else if(invite_code_ET1.getText().toString().trim().matches("")){
                     invite_code_ET1.setText(btn_0.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_0.getText().toString());
+                    invite_code_ET2.setText(btn_0.getText().toString());check_nums();
+
                 }
                 else if(invite_code_ET3.getText().toString().trim().matches("")){
                     invite_code_ET3.setText(btn_0.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET4.getText().toString().trim().matches("")){
                     invite_code_ET4.setText(btn_0.getText().toString());
+                    check_nums();
                 }
                 else if(invite_code_ET5.getText().toString().trim().matches("")){
                     invite_code_ET5.setText(btn_0.getText().toString());
+                    check_nums();
                 }
             }
         });
@@ -540,13 +611,33 @@ public class MainActivity extends AppCompatActivity {
                             if(RESULT.equals("SUCCESS")) {
                                 name_txt = name;
                                 id_txt = id;
-                                Result_TV.setText(RESULT);
+                                Result_TV.setText("Спасибо");
                                 Result_TV.setTextColor(Color.parseColor("green"));
 
                             }
                             else {
-                                    Result_TV.setText(RESULT);
+
+                                    Result_TV.setText("Неправильный код");
                                 Result_TV.setTextColor(Color.parseColor("red"));
+                                btn_0.setClickable(true);
+                                btn_9.setClickable(true);
+                                btn_8.setClickable(true);
+                                btn_7.setClickable(true);
+                                btn_6.setClickable(true);
+                                btn_5.setClickable(true);
+                                btn_4.setClickable(true);
+                                btn_3.setClickable(true);
+                                btn_2.setClickable(true);
+                                btn_1.setClickable(true);
+                                btn_sbmt.setClickable(true);
+                                btn_X.setClickable(true);
+                                Handler hand = new Handler();
+                                hand.postDelayed(new Runnable() {
+                                    public void run() {
+                                        Result_TV.setText("Введите 6 значный код для входа на территорию");
+                                        Result_TV.setTextColor(Color.parseColor("gray"));
+                                    }
+                                }, 2000);
 
                             }
 
@@ -571,6 +662,13 @@ public class MainActivity extends AppCompatActivity {
                             btn_1.setClickable(true);
                             btn_sbmt.setClickable(true);
                             btn_X.setClickable(true);
+                            Handler hand = new Handler();
+                            hand.postDelayed(new Runnable() {
+                                public void run() {
+                                    Result_TV.setText("Введите 6 значный код для входа на территорию");
+                                    Result_TV.setTextColor(Color.parseColor("gray"));
+                                }
+                            }, 2000);
                         });
                     }
                 } catch (Exception e) {
@@ -590,6 +688,13 @@ public class MainActivity extends AppCompatActivity {
                         btn_1.setClickable(true);
                         btn_sbmt.setClickable(true);
                         btn_X.setClickable(true);
+                        Handler hand = new Handler();
+                        hand.postDelayed(new Runnable() {
+                            public void run() {
+                                Result_TV.setText("Введите 6 значный код для входа на территорию");
+                                Result_TV.setTextColor(Color.parseColor("gray"));
+                            }
+                        }, 2000);
                     });
                 }
             }
@@ -611,6 +716,13 @@ public class MainActivity extends AppCompatActivity {
                     btn_1.setClickable(true);
                     btn_sbmt.setClickable(true);
                     btn_X.setClickable(true);
+                    Handler hand = new Handler();
+                    hand.postDelayed(new Runnable() {
+                        public void run() {
+                            Result_TV.setText("Введите 6 значный код для входа на территорию");
+                            Result_TV.setTextColor(Color.parseColor("red"));
+                        }
+                    }, 2000);
                 });
                 Log.e(APP_TAG, "onFailure", t);
             }
@@ -631,6 +743,28 @@ public class MainActivity extends AppCompatActivity {
                 // показываем новое Activity
                 startActivity(intent);
         }
+
+
+
+        public void check_nums(){
+        if (!invite_code_ET.getText().toString().equals("") &&
+                !invite_code_ET1.getText().toString().equals("") &&
+                !invite_code_ET2.getText().toString().equals("") &&
+                !invite_code_ET3.getText().toString().equals("") &&
+                !invite_code_ET4.getText().toString().equals("") &&
+                !invite_code_ET5.getText().toString().equals("")){
+            get_code();
+            loadProfile(invite_code);
+        }
+        }
+    @Override
+    public void onBackPressed() {
+
+    }
+
+
+
+
     }
 
 
