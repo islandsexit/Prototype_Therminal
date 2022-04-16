@@ -4,20 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prototype_therminal.data.GET_API;
 import com.example.prototype_therminal.model.GET_CODE;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText invite_code_ET3;
     private EditText invite_code_ET4;
     private EditText invite_code_ET5;
+
+    Handler screen = new Handler();
+
 
     private Button btn_1;
     private Button btn_2;
@@ -58,16 +66,129 @@ public class MainActivity extends AppCompatActivity {
     private String id_txt;
     private TextView Result_TV;
     private Boolean debag = false;
+    // To keep track of activity's window focus
+    boolean currentFocus;
+
+    // To keep track of activity's foreground/background status
+    boolean isPaused;
+
+    Handler collapseNotificationHandler;
+
+    public void collapseNow() {
+
+        // Initialize 'collapseNotificationHandler'
+        if (collapseNotificationHandler == null) {
+            collapseNotificationHandler = new Handler();
+        }
+
+        // If window focus has been lost && activity is not in a paused state
+        // Its a valid check because showing of notification panel
+        // steals the focus from current activity's window, but does not
+        // 'pause' the activity
+        if (!currentFocus && !isPaused) {
+
+            // Post a Runnable with some delay - currently set to 300 ms
+            collapseNotificationHandler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    // Use reflection to trigger a method from 'StatusBarManager'
+
+                    Object statusBarService = getSystemService("statusbar");
+                    Class<?> statusBarManager = null;
+
+                    try {
+                        statusBarManager = Class.forName("android.app.StatusBarManager");
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    Method collapseStatusBar = null;
+
+                    try {
+
+                        // Prior to API 17, the method to call is 'collapse()'
+                        // API 17 onwards, the method to call is `collapsePanels()`
+
+                        if (Build.VERSION.SDK_INT > 16) {
+                            collapseStatusBar = statusBarManager .getMethod("collapsePanels");
+                        } else {
+                            collapseStatusBar = statusBarManager .getMethod("collapse");
+                        }
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+
+                    collapseStatusBar.setAccessible(true);
+
+                    try {
+                        collapseStatusBar.invoke(statusBarService);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Check if the window focus has been returned
+                    // If it hasn't been returned, post this Runnable again
+                    // Currently, the delay is 100 ms. You can change this
+                    // value to suit your needs.
+                    if (!currentFocus && !isPaused) {
+                        collapseNotificationHandler.postDelayed(this, 10L);
+                    }
+
+                }
+            }, 300L);
+        }
+    }
+
+    public void screensaver(){
+       screen.removeCallbacksAndMessages(null);
+        screen.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intentcreen = new Intent(MainActivity.this, ScreenSaver.class);
+                startActivity(intentcreen);
+            }
+        }, 60000);
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        currentFocus = hasFocus;
+
+        if (!hasFocus) {
+            Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeDialog);
+            // Method that handles loss of window focus
+            collapseNow();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        screensaver();
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        screensaver();
 
 
 
 
         ///getWindow().addFlags(WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY);
+
+
 
 
         invite_code_ET = findViewById(R.id.invite_code_ET);
@@ -107,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         btn_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_1.getText().toString());
                     check_nums();
@@ -136,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         btn_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_2.getText().toString());
                     check_nums();
@@ -165,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
         btn_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_3.getText().toString());
                     check_nums();
@@ -194,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
         btn_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_4.getText().toString());
                     check_nums();
@@ -223,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
         btn_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_5.getText().toString());
                     check_nums();
@@ -252,6 +378,7 @@ public class MainActivity extends AppCompatActivity {
         btn_6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_6.getText().toString());
                     check_nums();
@@ -281,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
         btn_7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_7.getText().toString());
                     check_nums();
@@ -310,6 +438,7 @@ public class MainActivity extends AppCompatActivity {
         btn_8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_8.getText().toString());
                     check_nums();
@@ -339,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
         btn_9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_9.getText().toString());
                     check_nums();
@@ -368,6 +498,7 @@ public class MainActivity extends AppCompatActivity {
         btn_0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 if(invite_code_ET.getText().toString().trim().matches("")){
                     invite_code_ET.setText(btn_0.getText().toString());
                     check_nums();
@@ -401,6 +532,7 @@ public class MainActivity extends AppCompatActivity {
         btn_X.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 invite_code_ET.setText("");
                 invite_code_ET1.setText("");
                 invite_code_ET2.setText("");
@@ -425,6 +557,7 @@ public class MainActivity extends AppCompatActivity {
         btn_sbmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                screensaver();
                 get_code();
                 if (invite_code.length()!=6){
                     Result_TV.setText("КОД НЕПОЛНЫЙ");
@@ -437,7 +570,7 @@ public class MainActivity extends AppCompatActivity {
                     invite_code_ET5.setText("");
                 }else{
                     Result_TV.setTextColor(Color.parseColor("gray"));
-                    Result_TV.setText("Подождите...");
+                    Result_TV.setText("Проверяем ваш код...");
                     loadProfile(invite_code);
                     invite_code_ET.setText("");
                     invite_code_ET1.setText("");
@@ -543,7 +676,7 @@ public class MainActivity extends AppCompatActivity {
                         invite_code_ET4.setText("");
                         invite_code_ET5.setText("");
                     }else{
-                        Result_TV.setText("Подождите...");
+                        Result_TV.setText("Проверяем ваш код...");
                         Result_TV.setTextColor(Color.parseColor("gray"));
                         loadProfile(invite_code);
                         invite_code_ET.setText("");
@@ -719,8 +852,9 @@ public class MainActivity extends AppCompatActivity {
                     Handler hand = new Handler();
                     hand.postDelayed(new Runnable() {
                         public void run() {
+                            Result_TV.setTextColor(Color.parseColor("gray"));
                             Result_TV.setText("Введите 6 значный код для входа на территорию");
-                            Result_TV.setTextColor(Color.parseColor("red"));
+
                         }
                     }, 2000);
                 });
@@ -753,7 +887,28 @@ public class MainActivity extends AppCompatActivity {
                 !invite_code_ET3.getText().toString().equals("") &&
                 !invite_code_ET4.getText().toString().equals("") &&
                 !invite_code_ET5.getText().toString().equals("")){
+            Result_TV.setText("Проверяем ваш код...");
+            Result_TV.setTextColor(Color.parseColor("gray"));
+            btn_0.setClickable(false);
+            btn_9.setClickable(false);
+            btn_8.setClickable(false);
+            btn_7.setClickable(false);
+            btn_6.setClickable(false);
+            btn_5.setClickable(false);
+            btn_4.setClickable(false);
+            btn_3.setClickable(false);
+            btn_2.setClickable(false);
+            btn_1.setClickable(false);
+            btn_sbmt.setClickable(false);
+            btn_X.setClickable(false);
+
             get_code();
+            invite_code_ET.setText("");
+            invite_code_ET1.setText("");
+            invite_code_ET2.setText("");
+            invite_code_ET3.setText("");
+            invite_code_ET4.setText("");
+            invite_code_ET5.setText("");
             loadProfile(invite_code);
         }
         }

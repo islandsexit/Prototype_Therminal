@@ -9,14 +9,25 @@
     <TextureView
 
         android:id="@+id/camera_viev"
-        android:layout_width="445dp"
-        android:layout_height="443dp"
+        android:layout_width="455dp"
+        android:layout_height="455dp"
         android:rotation="-90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.191" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="455dp"
+        android:layout_height="455dp"
+        android:src="@drawable/face4"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_viev"
+        app:layout_constraintEnd_toEndOf="@+id/camera_viev"
+        app:layout_constraintStart_toStartOf="@+id/camera_viev"
+        app:layout_constraintTop_toTopOf="@+id/camera_viev"
+
+        />
 
     <Button
         android:id="@+id/btn_take_photo"
@@ -25,6 +36,8 @@
         android:layout_height="46dp"
         android:text="Фото"
         android:textSize="20sp"
+        android:backgroundTint="@color/orange"
+
         app:icon="@android:drawable/ic_menu_camera"
         app:iconPadding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +62,7 @@
     <Button
         android:id="@+id/btn_home"
         style="@style/Widget.Material3.Button"
+        android:backgroundTint="@color/orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Домой"
@@ -59,5 +73,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_take_photo"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="469dp"
+        android:layout_height="462dp"
+        android:text="Пожалуйста смотрите в камеру\n Ваше лицо должно полностью находиться в кадре\n В кадре должно присутствовать одно лицо"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:padding="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/camera_viev"
+        android:background="#bdbfbe"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

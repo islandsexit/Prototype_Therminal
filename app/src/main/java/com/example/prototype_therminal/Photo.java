@@ -59,6 +59,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -84,6 +86,7 @@ public class Photo extends AppCompatActivity {
     private String RESULT_FROM_POST;
     private String MSG_FROM_POST;
 
+    private TextView hint;
     private Button btn_home;
 
     private CascadeClassifier cascadeClassifier;
@@ -96,6 +99,100 @@ public class Photo extends AppCompatActivity {
     private final int CAMERA2   = 1;
     CameraService[] myCameras = null;
 
+    // To keep track of activity's window focus
+    boolean currentFocus;
+
+    // To keep track of activity's foreground/background status
+    boolean isPaused;
+
+    Handler collapseNotificationHandler;
+
+    public void collapseNow() {
+
+        // Initialize 'collapseNotificationHandler'
+        if (collapseNotificationHandler == null) {
+            collapseNotificationHandler = new Handler();
+        }
+
+        // If window focus has been lost && activity is not in a paused state
+        // Its a valid check because showing of notification panel
+        // steals the focus from current activity's window, but does not
+        // 'pause' the activity
+        if (!currentFocus && !isPaused) {
+
+            // Post a Runnable with some delay - currently set to 300 ms
+            collapseNotificationHandler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    // Use reflection to trigger a method from 'StatusBarManager'
+
+                    Object statusBarService = getSystemService("statusbar");
+                    Class<?> statusBarManager = null;
+
+                    try {
+                        statusBarManager = Class.forName("android.app.StatusBarManager");
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    Method collapseStatusBar = null;
+
+                    try {
+
+                        // Prior to API 17, the method to call is 'collapse()'
+                        // API 17 onwards, the method to call is `collapsePanels()`
+
+                        if (Build.VERSION.SDK_INT > 16) {
+                            collapseStatusBar = statusBarManager .getMethod("collapsePanels");
+                        } else {
+                            collapseStatusBar = statusBarManager .getMethod("collapse");
+                        }
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+
+                    collapseStatusBar.setAccessible(true);
+
+                    try {
+                        collapseStatusBar.invoke(statusBarService);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Check if the window focus has been returned
+                    // If it hasn't been returned, post this Runnable again
+                    // Currently, the delay is 100 ms. You can change this
+                    // value to suit your needs.
+                    if (!currentFocus && !isPaused) {
+                        collapseNotificationHandler.postDelayed(this, 10L);
+                    }
+
+                }
+            }, 300L);
+        }
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        currentFocus = hasFocus;
+
+        if (!hasFocus) {
+            Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeDialog);
+            // Method that handles loss of window focus
+            collapseNow();
+        }
+    }
+
+
 
 
     @Override
@@ -107,6 +204,8 @@ public class Photo extends AppCompatActivity {
          name = getIntent().getStringExtra("name");
          id = getIntent().getStringExtra("id");
          RESULT_TV = findViewById(R.id.TV_RESULT);
+         hint = findViewById(R.id.hint);
+
 
 
          btn_home = findViewById(R.id.btn_home);
@@ -184,11 +283,26 @@ public class Photo extends AppCompatActivity {
                 hand_timer.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        myCameras[CAMERA2].openCamera();
                         camera_view.setClickable(true);
                     }
                 }, 3000);
             }
         });
+        btn_take_photo.setClickable(false);
+        btn_take_photo.setEnabled(false);
+        Handler hint_hand = new Handler();
+        hint_hand.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hint.setVisibility(View.GONE);
+                btn_take_photo.setClickable(true);
+                btn_take_photo.setEnabled(true);
+
+            }
+        },5000);
+
+
     }
 
 
@@ -341,7 +455,7 @@ public class Photo extends AppCompatActivity {
                         MSG_FROM_POST = POST_PHOTO.getMsg();
 
                         runOnUiThread(() -> {
-                            if(RESULT_FROM_POST.equals("SUCCESS")){
+                            if(!RESULT_FROM_POST.equals("SUCCESS")){
                                 RESULT_TV.setTextColor(Color.parseColor("green"));
                                 Handler handler_new_view = new Handler();
                                 handler_new_view.postDelayed(new Runnable() {

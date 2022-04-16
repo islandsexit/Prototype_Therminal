@@ -17,4 +17,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="PurpleButton" parent="@style/Widget.Material3.Button">
+        <item name="colorButtonNormal">#4c98f5</item>
+        <item name="colorControlHighlight">#79b2f7</item>
+    </style>
+
 </resources>
