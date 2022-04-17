@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText invite_code_ET5;
 
     Handler screen = new Handler();
+    private static final long TIMER_DURATION = 3000L;
+    private static final long TIMER_INTERVAL = 1000L;
+
+    private CountDownTimer mCountDownTimer;
 
 
     private Button btn_1;
@@ -68,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
     private Boolean debag = false;
     // To keep track of activity's window focus
     boolean currentFocus;
+   Runnable scr =  new Runnable() {
+        @Override
+        public void run() {
+            Intent intentcreen = new Intent(MainActivity.this, ScreenSaver.class);
+            startActivity(intentcreen);
+        }
+    };
 
     // To keep track of activity's foreground/background status
     boolean isPaused;
@@ -145,16 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void screensaver(){
-       screen.removeCallbacksAndMessages(null);
-        screen.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intentcreen = new Intent(MainActivity.this, ScreenSaver.class);
-                startActivity(intentcreen);
-            }
-        }, 60000);
-    }
+
 
 
     @Override
@@ -181,7 +185,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        screensaver();
+        mCountDownTimer = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                 // Saving timeRemaining in Activity for pause/resume of CountDownTimer.
+            }
+
+            @Override
+            public void onFinish() {
+                Intent intent = new Intent(MainActivity.this, ScreenSaver.class);
+                startActivity(intent);
+            }
+        }.start();
 
 
 
@@ -915,6 +931,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+    public void screensaver(){
+        mCountDownTimer.cancel();
+        mCountDownTimer.start();
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCountDownTimer.cancel();
+        mCountDownTimer = null;
     }
 
 
