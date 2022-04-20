@@ -76,7 +76,7 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_sbmt"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET3"
@@ -180,6 +180,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -352,6 +353,28 @@
             app:layout_constraintStart_toEndOf="@+id/button8"
             app:layout_constraintTop_toBottomOf="@+id/button4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/javaCameraView"
+        android:layout_width="94dp"
+        android:layout_height="82dp"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="94dp"
+        android:layout_height="82dp"
+        android:layout_marginStart="4dp"
+        android:foreground="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

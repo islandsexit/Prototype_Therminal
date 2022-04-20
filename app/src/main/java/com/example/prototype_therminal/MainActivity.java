@@ -2,6 +2,7 @@ package com.example.prototype_therminal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,22 @@ import com.example.prototype_therminal.data.GET_API;
 import com.example.prototype_therminal.model.GET_CODE;
 import com.google.gson.GsonBuilder;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -33,10 +50,22 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     public static final String APP_TAG = "retrofit-json-variable";
     private static final String BASE_URL = "http://192.168.48.131/";
+
+    CameraBridgeViewBase cameraBridgeViewBase;
+    BaseLoaderCallback baseLoaderCallback;
+    private static final String    TAG                 = "OCVSample::Activity";
+    private static final Scalar FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
+    private Mat mRgba;
+    private Mat                    mGray;
+    private File                   mCascadeFile;
+    private CascadeClassifier      mJavaDetector;
+    private float                  mRelativeFaceSize   = 0.2f;
+    private int                    mAbsoluteFaceSize   = 0;
+
 
     private EditText invite_code_ET;
     private EditText invite_code_ET1;
@@ -46,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText invite_code_ET5;
 
     Handler screen = new Handler();
-    private static final long TIMER_DURATION = 3000L;
+    private static final long TIMER_DURATION = 60000L;
     private static final long TIMER_INTERVAL = 1000L;
 
     private CountDownTimer mCountDownTimer;
@@ -74,13 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean debag = false;
     // To keep track of activity's window focus
     boolean currentFocus;
-   Runnable scr =  new Runnable() {
-        @Override
-        public void run() {
-            Intent intentcreen = new Intent(MainActivity.this, ScreenSaver.class);
-            startActivity(intentcreen);
-        }
-    };
+
 
     // To keep track of activity's foreground/background status
     boolean isPaused;
@@ -198,6 +221,65 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }.start();
+
+        cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.javaCameraView);
+//        cameraBridgeViewBase.setVisibility(View.VISIBLE);
+        cameraBridgeViewBase.setCameraIndex(1);
+        cameraBridgeViewBase.setCvCameraViewListener(MainActivity.this);
+
+        baseLoaderCallback = new BaseLoaderCallback(this) {
+
+            @Override
+            public void onManagerConnected(int status) {
+                super.onManagerConnected(status);
+
+                switch(status){
+                    case BaseLoaderCallback.SUCCESS:
+                    {
+                        Log.i(TAG, "OpenCV loaded successfully");
+
+                        // Load native library after(!) OpenCV initialization
+//                        System.loadLibrary("ndklibrarysample");
+
+                        try {
+                            // load cascade file from application resources
+                            InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt2);
+                            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+                            mCascadeFile = new File(cascadeDir, "haarcascade_frontalface_alt2.xml");
+                            FileOutputStream os = new FileOutputStream(mCascadeFile);
+
+                            byte[] buffer = new byte[4096];
+                            int bytesRead;
+                            while ((bytesRead = is.read(buffer)) != -1) {
+                                os.write(buffer, 0, bytesRead);
+                            }
+                            is.close();
+                            os.close();
+
+                            mJavaDetector = new CascadeClassifier(mCascadeFile.getAbsolutePath());
+                            if (mJavaDetector.empty()) {
+                                Log.e(TAG, "Failed to load cascade classifier");
+                                mJavaDetector = null;
+                            } else
+                                Log.i(TAG, "Loaded cascade classifier from " + mCascadeFile.getAbsolutePath());
+
+
+
+                            cascadeDir.delete();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "Failed to load cascade. Exception thrown: " + e);
+                        }
+
+                        cameraBridgeViewBase.enableView();
+                    }
+                    default:
+                        super.onManagerConnected(status);
+                        break;
+                }
+            }
+        };
 
 
 
@@ -937,13 +1019,92 @@ public class MainActivity extends AppCompatActivity {
         mCountDownTimer.start();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!OpenCVLoader.initDebug()){
+            Toast.makeText(getApplicationContext(),"There's a problem, yo!", Toast.LENGTH_SHORT).show();
+        }
+
+        else
+        {
+            baseLoaderCallback.onManagerConnected(baseLoaderCallback.SUCCESS);
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
         mCountDownTimer.cancel();
         mCountDownTimer = null;
+        if(cameraBridgeViewBase!=null){
+
+            cameraBridgeViewBase.disableView();
+        }
     }
 
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
+
+        mRgba = inputFrame.rgba();
+        mGray = inputFrame.gray();
+
+        if (mAbsoluteFaceSize == 0) {
+            int height = mGray.rows();
+            if (Math.round(height * mRelativeFaceSize) > 0) {
+                mAbsoluteFaceSize = Math.round(height * mRelativeFaceSize);
+            }
+//            mNativeDetector.setMinFaceSize(mAbsoluteFaceSize);
+        }
+
+        MatOfRect faces = new MatOfRect();
+
+        if (true) {
+            if (true)
+                mJavaDetector.detectMultiScale(mGray, faces, 1.1, 2, 2, // TODO: objdetect.CV_HAAR_SCALE_IMAGE
+                        new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
+        }
+
+
+        else {
+            Log.e(TAG, "Detection method is not selected!");
+        }
+
+        Rect[] facesArray = faces.toArray();
+        for (int i = 0; i < facesArray.length; i++) {
+            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
+            Log.e(TAG, "face detected!");
+            //TODO face detected
+            //Intent intent = new Intent(ScreenSaver.this, MainActivity.class);
+           // startActivity(intent);
+            screensaver();
+        }
+        return mRgba;
+    }
+
+    //todo onCameraViewStarted
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+        mGray = new Mat();
+        mRgba = new Mat();
+    }
+
+    //todo on cameraviewstop
+    @Override
+    public void onCameraViewStopped(){
+        mGray.release();
+        mRgba.release();
+    }
+
+    //todo onDestroy
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cameraBridgeViewBase!=null){
+            cameraBridgeViewBase.disableView();
+        }
+    }
 
 
 

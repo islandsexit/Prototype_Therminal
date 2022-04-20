@@ -48,7 +48,7 @@ public class ScreenSaver extends AppCompatActivity implements CameraBridgeViewBa
     private CascadeClassifier      mJavaDetector;
 
 
-    private float                  mRelativeFaceSize   = 0.2f;
+    private float                  mRelativeFaceSize   = 0.5f;
     private int                    mAbsoluteFaceSize   = 0;
 
 

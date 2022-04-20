@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -64,6 +66,7 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
+    import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -106,6 +109,8 @@ public class Photo extends AppCompatActivity {
     boolean isPaused;
 
     Handler collapseNotificationHandler;
+
+    private Size mPreviewSize;
 
     public void collapseNow() {
 
@@ -191,6 +196,30 @@ public class Photo extends AppCompatActivity {
             collapseNow();
         }
     }
+    private void configureTransform(int viewWidth, int viewHeight) {
+        Activity activity = Photo.this;
+        if (null == camera_view || null == mPreviewSize) {
+            return;
+        }
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        Matrix matrix = new Matrix();
+        RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
+        RectF bufferRect = new RectF(0, 0, camera_view.getHeight(), camera_view.getWidth());
+        float centerX = viewRect.centerX();
+        float centerY = viewRect.centerY();
+        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
+            bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY());
+            matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
+            float scale = Math.max(
+                    (float) viewHeight / camera_view.getHeight(),
+                    (float) viewWidth / camera_view.getWidth());
+            matrix.postScale(scale, scale, centerX, centerY);
+            matrix.postRotate(90 * (rotation - 2), centerX, centerY);
+        } else if (Surface.ROTATION_180 == rotation) {
+            matrix.postRotate(180, centerX, centerY);
+        }
+        camera_view.setTransform(matrix);
+    }
 
 
 
@@ -200,6 +229,9 @@ public class Photo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         camera_view = findViewById(R.id.camera_viev);
+        configureTransform(camera_view.getWidth(), camera_view.getHeight());
+
+
         btn_take_photo = findViewById(R.id.btn_take_photo);
          name = getIntent().getStringExtra("name");
          id = getIntent().getStringExtra("id");
@@ -222,6 +254,7 @@ public class Photo extends AppCompatActivity {
 
 
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
         try{
 
             // Получение списка камер с устройства
@@ -234,6 +267,7 @@ public class Photo extends AppCompatActivity {
 
                 // создаем обработчик для камеры
                 myCameras[id] = new CameraService(mCameraManager,cameraID);
+
             }
         }
         catch(CameraAccessException e){
@@ -248,6 +282,7 @@ public class Photo extends AppCompatActivity {
         {
             requestPermissions(new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+
         myCameras[CAMERA2].openCamera();
 
         btn_take_photo.setOnClickListener(new View.OnClickListener() {
@@ -455,22 +490,24 @@ public class Photo extends AppCompatActivity {
                         MSG_FROM_POST = POST_PHOTO.getMsg();
 
                         runOnUiThread(() -> {
-                            if(!RESULT_FROM_POST.equals("SUCCESS")){
+                            if(RESULT_FROM_POST.equals("SUCCESS")){
                                 RESULT_TV.setTextColor(Color.parseColor("green"));
+                                RESULT_TV.setText("Спасибо");
                                 Handler handler_new_view = new Handler();
                                 handler_new_view.postDelayed(new Runnable() {
                                     public void run() {
                                         goNewView();
                                     }
-                                }, 3000);
+                                }, 4000);
                             }
                             else {
 
                                 RESULT_TV.setTextColor(Color.parseColor("red"));
                                 btn_take_photo.setClickable(true);
                                 btn_home.setClickable(true);
+                                RESULT_TV.setText(MSG_FROM_POST);
                             }
-                            RESULT_TV.setText(MSG_FROM_POST);
+
 
 
                         });
@@ -603,7 +640,7 @@ public class Photo extends AppCompatActivity {
 
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
 
-                     File mFile2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "test2.jpg");
+                     File mFile2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), UUID.randomUUID().toString()+"_"+id+".png");
                     FileOutputStream fos = null;
                     fos = new FileOutputStream(mFile2);
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -664,7 +701,7 @@ public class Photo extends AppCompatActivity {
             mCameraManager = cameraManager;
             mCameraID = cameraID;
         }
-        private File mFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "test1.jpg");;
+        private File mFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), UUID.randomUUID().toString()+".png");;
         public boolean isOpen() {
 
             if (mCameraDevice == null) {
@@ -735,6 +772,7 @@ public class Photo extends AppCompatActivity {
             camera_view = findViewById(R.id.camera_viev);
             SurfaceTexture texture = camera_view.getSurfaceTexture();
             Surface surface = new Surface(texture);
+
 
             try {
                 final CaptureRequest.Builder builder =
