@@ -274,7 +274,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
             public void onFinish() {
                 count=0;
                 can_take_photo=true;
-                RESULT_TV.setText("...");
+
             }
         }.start();
         mCountDownTimer2 = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
@@ -287,7 +287,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
             @Override
             public void onFinish() {
                 count=0;
-                RESULT_TV.setText("...");
+
             }
         }.start();
 
@@ -359,8 +359,20 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         try{
-            if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null){
-                RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
+            if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
+
+                if (cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
+                            cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                            ////////TODO вот тут берутся значения message from post
+                            cameraBridgeViewBase.setPhoto_taken(false);
+                        }
+                    });
+
+                }
             }
         }catch (Exception e){
             Log.i(APP_TAG, "waiting for response");
@@ -394,7 +406,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
             Log.i("MainActivity.this", "y:"+facesArray[0].y);
             Log.i("MainActivity.this", "w:"+facesArray[0].width);
             Log.i("MainActivity.this", "h:"+facesArray[0].height);
-            Log.e(TAG, "plate detected!");
+            Log.e(TAG, "face detected!");
             count++;
             if (can_take_photo) {
                 switch(count){
@@ -416,13 +428,16 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                         String uuid = UUID.randomUUID().toString() + ".png";
                         cameraBridgeViewBase.setId(id);
                         cameraBridgeViewBase.setName(name); ///Теперь я передаю в camerabridgebase id & name, тюк внутри этого класса отправляю пост запрос
-                        cameraBridgeViewBase.takePicture(uuid);
+                        if (!cameraBridgeViewBase.photo_taken) {
+                            cameraBridgeViewBase.takePicture(uuid);
+                        }
                         mCountDownTimer.cancel();
                         mCountDownTimer2.cancel();
+                          ///////disable view
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-//                                hint.setVisibility(View.VISIBLE);
+                               RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
                             }
                         });
 

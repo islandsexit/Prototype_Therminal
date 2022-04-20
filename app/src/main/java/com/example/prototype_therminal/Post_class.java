@@ -19,6 +19,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Post_class {
     public String RESULT_FROM_POST;
     public String MSG_FROM_POST;
+
+    public void setRESULT_FROM_POST(String RESULT_FROM_POST) {
+        this.RESULT_FROM_POST = RESULT_FROM_POST;
+    }
+
     //TODO POST_IMG_64
     public void POST_img64(String ID, String img64, String name) {
         GsonBuilder gsonBuilder = new GsonBuilder();
