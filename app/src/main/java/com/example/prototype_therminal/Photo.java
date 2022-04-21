@@ -38,6 +38,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,8 +106,8 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private Mat                    mGray;
     private File                   mCascadeFile;
     private CascadeClassifier      mJavaDetector;
-    private float                  mRelativeFaceSize   = 0.6f;
-    private int                    mAbsoluteFaceSize   = 0;
+    private float                  mRelativeFaceSize   = 0.5f;
+    private int                    mAbsoluteFaceSize   = 450;
     private int                    count = 0;
 
     private static final long      TIMER_DURATION = 2000L;
@@ -116,7 +117,11 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private CountDownTimer         mCountDownTimer2;
     private boolean         can_take_photo;
 
-    private String Res_form_Post = null;
+    private boolean count_for_proccessing = false;
+
+    private ImageView img_face;
+    private ImageView img_circle;
+    private ImageView img_done;
 
 
 
@@ -231,6 +236,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
          id = getIntent().getStringExtra("id");
          RESULT_TV = findViewById(R.id.TV_RESULT);
          hint = findViewById(R.id.hint);
+         img_circle = findViewById(R.id.appCompatImageViewCirc);
+         img_face = findViewById(R.id.appCompatImageView);
+         img_done = findViewById(R.id.Done);
 
 
 
@@ -242,7 +250,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
              }
          });
 
-         RESULT_TV.setText("Пожалуйста сделайте фото своего лица");
+         RESULT_TV.setText("Пожалуйста стойте по границам");
 
 
 
@@ -277,7 +285,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
             }
         }.start();
-        mCountDownTimer2 = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
+        mCountDownTimer2 = new CountDownTimer(5000L, TIMER_INTERVAL) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -287,6 +295,12 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
             @Override
             public void onFinish() {
                 count=0;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RESULT_TV.setText("Встаньте ровно по рисунку");
+                    }
+                });
 
             }
         }.start();
@@ -361,7 +375,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         try{
             if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
 
-                if (cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                if (!cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -369,11 +383,32 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
                             ////////TODO вот тут берутся значения message from post
                             cameraBridgeViewBase.setPhoto_taken(false);
+
                         }
                     });
 
                 }
+                else{
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                    RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
+                    cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                    cameraBridgeViewBase.disableView();
+                    cameraBridgeViewBase.setVisibility(View.INVISIBLE);
+                    img_done.setVisibility(View.VISIBLE);
+                    img_circle.setVisibility(View.GONE);
+                    img_face.setVisibility(View.GONE);
+                    RESULT_TV.setText(null);
+
+
+                        }
+                    });
+
+
+                }
             }
+
         }catch (Exception e){
             Log.i(APP_TAG, "waiting for response");
         }
@@ -410,19 +445,36 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
             count++;
             if (can_take_photo) {
                 switch(count){
-                    case 50:
+                    case 30:
                         Log.i(TAG, "toast wait---------------------------------------------------------------------------------------------------");
 
                         //RESULT_TV.setText("Подождите");
                         mCountDownTimer2.cancel();
                         mCountDownTimer2.start();
-
+                        if(count_for_proccessing){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    RESULT_TV.setText("Встаньте ровно по рисунку");
+                                    count_for_proccessing = false;
+                                }
+                            });
+                        }
+                        else{
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    RESULT_TV.setText("Делаю фото");
+                                    count_for_proccessing =true;
+                                }
+                            });
+                        }
                         count++;
 
                         break;
 
 
-                    case 99:
+                    case 140:
 
                         cameraBridgeViewBase.setFace_array(facesArray);
                         String uuid = UUID.randomUUID().toString() + ".png";

@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private String name_txt;
     private String id_txt;
     private TextView Result_TV;
-    private Boolean debag = false;
+    private Boolean debag = true;
     // To keep track of activity's window focus
     boolean currentFocus;
 

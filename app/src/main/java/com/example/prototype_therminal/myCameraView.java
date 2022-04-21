@@ -140,6 +140,7 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
             img64 = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
+            POST.setRESULT_FROM_POST(null);
             POST.POST_img64(id, img64, name);
             photo_taken = true;
 

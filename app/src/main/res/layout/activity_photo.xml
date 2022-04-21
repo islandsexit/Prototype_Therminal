@@ -15,30 +15,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextureView
-
-        android:id="@+id/camera_viev"
-        android:layout_width="340dp"
-        android:layout_height="455dp"
-        android:rotation="-90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.191"
-        android:visibility="invisible"/>
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
-        android:layout_width="455dp"
-        android:layout_height="340dp"
+        android:layout_width="960px"
+        android:layout_height="720px"
         android:src="@drawable/face5"
-        app:layout_constraintBottom_toBottomOf="@+id/camera_viev"
-        app:layout_constraintEnd_toEndOf="@+id/camera_viev"
-        app:layout_constraintStart_toStartOf="@+id/camera_viev"
 
-        app:layout_constraintTop_toTopOf="@+id/camera_viev"
-        android:visibility="gone"/>
+
+        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
+        app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageViewCirc"
+        android:layout_width="960px"
+        android:layout_height="720px"
+        android:src="@drawable/circ"
+
+
+        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
+        app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/Done"
+        android:layout_width="960px"
+        android:layout_height="720px"
+        android:src="@drawable/done"
+
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
+        app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
 
     <TextView
         android:id="@+id/TV_RESULT"
@@ -48,8 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/camera_viev" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_home"
