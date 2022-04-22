@@ -26,6 +26,12 @@
         android:theme="@style/Theme.Prototype_Therminal"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".HintActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ErrorPage"
+            android:exported="false" />
+        <activity
             android:name=".ScreenSaver"
             android:exported="false" />
         <activity

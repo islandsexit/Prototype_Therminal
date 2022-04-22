@@ -1,40 +1,17 @@
 package com.example.prototype_therminal;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.ImageFormat;
 import android.graphics.Matrix;
-import android.graphics.RectF;
-import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
 import android.media.ExifInterface;
-import android.media.Image;
-import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.util.Base64;
 import android.util.Log;
-import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -42,42 +19,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.prototype_therminal.data.POST_API;
-import com.example.prototype_therminal.model.POST_PHOTO;
-
-import com.google.gson.GsonBuilder;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
-    import java.util.UUID;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.UUID;
 
 public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -122,6 +80,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private ImageView img_face;
     private ImageView img_circle;
     private ImageView img_done;
+    private Button btn_error;
+
+    private int count_for_error = 0;
 
 
 
@@ -229,6 +190,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+        btn_error = findViewById(R.id.btn_error);
 
 
 
@@ -239,6 +201,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
          img_circle = findViewById(R.id.appCompatImageViewCirc);
          img_face = findViewById(R.id.appCompatImageView);
          img_done = findViewById(R.id.Done);
+//        ImageView imageView = (ImageView) findViewById(R.id.load);
+//        Glide.with(this).asGif().load(R.drawable.loading).into(imageView);
+
 
 
 
@@ -247,6 +212,16 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
              @Override
              public void onClick(View view) {
                  goNewView();
+             }
+         });
+
+         btn_error.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Intent intent = new Intent(Photo.this, ErrorPage.class);
+
+                 // показываем новое Activity
+                 startActivity(intent);
              }
          });
 
@@ -375,14 +350,31 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         try{
             if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
 
-                if (!cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                if (cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
-                            cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
-                            ////////TODO вот тут берутся значения message from post
-                            cameraBridgeViewBase.setPhoto_taken(false);
+                            if(count_for_error<=5) {
+                                RESULT_TV.setText("Повторное сканирование");
+                                cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                                ////////TODO вот тут берутся значения message from post
+                                cameraBridgeViewBase.setPhoto_taken(false);
+                                count_for_error++;
+                            }
+                            else{
+                                RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
+                                cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                                cameraBridgeViewBase.disableView();
+                                cameraBridgeViewBase.setVisibility(View.INVISIBLE);
+                                img_done.setImageResource(R.drawable.error);
+                                img_done.setVisibility(View.VISIBLE);
+                                img_circle.setVisibility(View.GONE);
+                                img_face.setVisibility(View.GONE);
+                                RESULT_TV.setText("Невозможно  завершить сканирование \n Обратитесь к администратору");
+                                count_for_error=0;
+                                btn_error.setVisibility(View.VISIBLE);
+
+                            }
 
                         }
                     });
@@ -399,7 +391,17 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                     img_done.setVisibility(View.VISIBLE);
                     img_circle.setVisibility(View.GONE);
                     img_face.setVisibility(View.GONE);
-                    RESULT_TV.setText(null);
+                    mCountDownTimer.cancel();
+                    mCountDownTimer2.cancel();
+                    RESULT_TV.setText("Сканирование завершено.\n Можете проходить через турникеты по лицу");
+                    Handler new_view = new Handler();
+                    new_view.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            goNewView();
+                        }
+                    }, 10000);
+
 
 
                         }
@@ -436,11 +438,11 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
         Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++) {
-            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
-            Log.i("MainActivity.this", "x:"+facesArray[0].x);
-            Log.i("MainActivity.this", "y:"+facesArray[0].y);
-            Log.i("MainActivity.this", "w:"+facesArray[0].width);
-            Log.i("MainActivity.this", "h:"+facesArray[0].height);
+//            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
+//            Log.i("MainActivity.this", "x:"+facesArray[0].x);
+//            Log.i("MainActivity.this", "y:"+facesArray[0].y);
+//            Log.i("MainActivity.this", "w:"+facesArray[0].width);
+//            Log.i("MainActivity.this", "h:"+facesArray[0].height);
             Log.e(TAG, "face detected!");
             count++;
             if (can_take_photo) {
@@ -464,7 +466,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    RESULT_TV.setText("Делаю фото");
+                                    RESULT_TV.setText("Выполняется сканирование");
                                     count_for_proccessing =true;
                                 }
                             });
@@ -474,7 +476,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                         break;
 
 
-                    case 140:
+                    case 100:
 
                         cameraBridgeViewBase.setFace_array(facesArray);
                         String uuid = UUID.randomUUID().toString() + ".png";
@@ -643,6 +645,10 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
         // показываем новое Activity
         startActivity(intent);
+    }
+    @Override
+    public void onBackPressed() {
+
     }
 }
 

@@ -53,7 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     public static final String APP_TAG = "retrofit-json-variable";
-    private static final String BASE_URL = "http://192.168.48.131/";
+    private static final String BASE_URL = "http://192.168.48.131:8000/";
 
     CameraBridgeViewBase cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private Boolean debag = true;
     // To keep track of activity's window focus
     boolean currentFocus;
+    private Button btn_hint;
 
 
     // To keep track of activity's foreground/background status
@@ -308,6 +309,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         btn_8 = findViewById(R.id.button8);
         btn_9 = findViewById(R.id.button9);
         btn_0 = findViewById(R.id.button_0);
+
+        btn_hint = findViewById(R.id.hint);
+        btn_hint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, HintActivity.class);
+
+                // показываем новое Activity
+                startActivity(intent);
+            }
+        });
 
         btn_0.setClickable(true);
         btn_9.setClickable(true);
@@ -933,7 +945,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             @Override
             public void onFailure(Call<GET_CODE> call, Throwable t) {
                 runOnUiThread(()->{
-                    Result_TV.setText("Network ERROR");
+                    Result_TV.setText("Сервер недоступен");
                     Result_TV.setTextColor(Color.parseColor("red"));
                     btn_0.setClickable(true);
                     btn_9.setClickable(true);
@@ -1015,8 +1027,20 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     }
     public void screensaver(){
-        mCountDownTimer.cancel();
-        mCountDownTimer.start();
+        try{
+            mCountDownTimer.cancel();
+        }
+        catch(Exception e){
+            Log.e("APP_LOG", e.toString());
+        }
+        try{
+            mCountDownTimer.start();
+        }
+        catch(Exception e){
+            Log.e("APP_LOG", e.toString());
+        }
+
+
 
     }
 

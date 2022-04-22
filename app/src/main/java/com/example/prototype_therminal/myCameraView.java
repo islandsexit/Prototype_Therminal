@@ -125,12 +125,16 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             int height_face_1_2=face_array[0].height/2;
             int height_face_1_6 = face_array[0].height / 6;
             int weight_face_1_6=face_array[0].width/6;
-
-            if(face_array[0].y-height_face_1_3 + face_array[0].height+height_face_1_3 <=720){
-                bm = Bitmap.createBitmap(bm, face_array[0].x-weight_face_1_6,face_array[0].y-height_face_1_6 , face_array[0].width+weight_face_1_6, face_array[0].height+height_face_1_6);
-            }else{
+            try{
+                if(face_array[0].y-height_face_1_3 + face_array[0].height+height_face_1_3 <=720){
+                    bm = Bitmap.createBitmap(bm, face_array[0].x-weight_face_1_6,face_array[0].y-height_face_1_6 , face_array[0].width+weight_face_1_6, face_array[0].height+height_face_1_6);
+                }else{
+                    bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
+                }
+            }catch (Exception e ){
                 bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
             }
+
 
             File mFile3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), UUID.randomUUID().toString()+"_"+".jpg");
             FileOutputStream fos2 = null;

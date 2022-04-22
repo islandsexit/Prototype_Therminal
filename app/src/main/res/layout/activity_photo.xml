@@ -10,7 +10,7 @@
         android:id="@+id/myCameraView"
         android:layout_width="960px"
         android:layout_height="720px"
-        app:layout_constraintBottom_toTopOf="@+id/TV_RESULT"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,6 +24,19 @@
 
         app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
         app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/load"
+        android:layout_width="720px"
+        android:layout_height="720px"
+
+
+        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
+        app:layout_constraintEnd_toEndOf="@+id/myCameraView"
+        app:layout_constraintStart_toStartOf="@+id/myCameraView" />
+
+
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageViewCirc"
         android:layout_width="960px"
@@ -47,8 +60,10 @@
         android:id="@+id/TV_RESULT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/myCameraView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent" />
@@ -58,13 +73,29 @@
         style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
         android:backgroundTint="@color/orange"
         android:text="Домой"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_error"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:text="Что не так?"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myCameraView"
+        app:layout_constraintVertical_bias="0.366" />
 
     <TextView
         android:id="@+id/hint"

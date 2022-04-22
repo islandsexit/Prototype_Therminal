@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Post_class {
     public String RESULT_FROM_POST;
     public String MSG_FROM_POST;
+    public boolean debag = true;
 
     public void setRESULT_FROM_POST(String RESULT_FROM_POST) {
         this.RESULT_FROM_POST = RESULT_FROM_POST;
@@ -35,6 +36,12 @@ public class Post_class {
                 .build();
 
         POST_API post_api = retrofit.create(POST_API.class);
+
+        if(debag){
+            ID = "88";
+            name = "ProCOFFEe";
+        }
+
         Call<POST_PHOTO> call = post_api.Post_img64(ID, img64, name);
         Log.e("POST", "img64:"+img64.charAt(2)+" id= "+ID+" name: "+name);
         call.enqueue(new Callback<POST_PHOTO>() {

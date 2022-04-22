@@ -257,5 +257,8 @@ public class ScreenSaver extends AppCompatActivity implements CameraBridgeViewBa
             Log.e("OpenCVActivity", "Error loading cascade", e);
         }}
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }
