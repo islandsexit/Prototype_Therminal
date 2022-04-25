@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Dettings">
+
+    <EditText
+        android:id="@+id/ET_WHERE"
+        android:layout_width="333dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="200dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Подъезд номер"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/ET_IPGET"
+        android:layout_width="333dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="http://192.168.48.131:8000/"
+        app:layout_constraintStart_toStartOf="@+id/ET_WHERE"
+        app:layout_constraintTop_toBottomOf="@+id/ET_WHERE" />
+
+    <EditText
+        android:id="@+id/ET_IPPOST"
+        android:layout_width="333dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="http://192.168.48.144:8080"
+        app:layout_constraintStart_toStartOf="@+id/ET_IPGET"
+        app:layout_constraintTop_toBottomOf="@+id/ET_IPGET" />
+
+    <Button
+        android:id="@+id/BTN_SAVE"
+        style="@style/MaterialAlertDialog.Material3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/orange"
+        android:text="Сохранить настройки"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_IPPOST" />
+
+    <Button
+        android:id="@+id/BTN_HOME"
+        style="@style/MaterialAlertDialog.Material3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:text="Закрыть"
+        app:layout_constraintStart_toEndOf="@+id/BTN_SAVE"
+        app:layout_constraintTop_toTopOf="@+id/BTN_SAVE" />
+
+    <TextView
+        android:id="@+id/TV_WHERE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Подъезд"
+        app:layout_constraintEnd_toStartOf="@+id/ET_WHERE"
+        app:layout_constraintTop_toTopOf="@+id/ET_WHERE" />
+
+    <TextView
+        android:id="@+id/TV_IPGET"
+        android:layout_width="102dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="IP веб сервера"
+        app:layout_constraintEnd_toStartOf="@+id/ET_IPGET"
+        app:layout_constraintTop_toTopOf="@+id/ET_IPGET" />
+
+    <TextView
+        android:id="@+id/TV_IPPOST"
+        android:layout_width="143dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="IP сервера VIGFACE"
+        app:layout_constraintEnd_toStartOf="@+id/ET_IPPOST"
+        app:layout_constraintTop_toTopOf="@+id/ET_IPPOST" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,12 +26,12 @@ public class Post_class {
     }
 
     //TODO POST_IMG_64
-    public void POST_img64(String ID, String img64, String name) {
+    public void POST_img64(String ID, String img64, String name, String URL) {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.48.114:8080")
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .build();
 
@@ -40,6 +40,7 @@ public class Post_class {
         if(debag){
             ID = "88";
             name = "ProCOFFEe";
+
         }
 
         Call<POST_PHOTO> call = post_api.Post_img64(ID, img64, name);
@@ -96,7 +97,8 @@ public class Post_class {
             @Override
             public void onFailure(Call<POST_PHOTO> call, Throwable t) {
                 Log.e("POST", "onFailure", t);
-
+                RESULT_FROM_POST = "ERROR";
+                MSG_FROM_POST = "ОШИБКА ОТВЕТА ОТ СЕРВЕРА";
 
             }
         });

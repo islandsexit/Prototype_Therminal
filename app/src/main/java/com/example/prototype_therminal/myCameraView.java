@@ -1,6 +1,7 @@
 package com.example.prototype_therminal;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -11,6 +12,8 @@ import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.opencv.android.JavaCameraView;
 import org.opencv.core.Rect;
@@ -134,8 +137,8 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             }catch (Exception e ){
                 bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
             }
-
-
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String URL = sp.getString("ippost", "");
             File mFile3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), UUID.randomUUID().toString()+"_"+".jpg");
             FileOutputStream fos2 = null;
             fos2 = new FileOutputStream(mFile3);
@@ -145,7 +148,7 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             bm.compress(Bitmap.CompressFormat.JPEG, 100, bOut);
             img64 = Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
             POST.setRESULT_FROM_POST(null);
-            POST.POST_img64(id, img64, name);
+            POST.POST_img64(id, img64, name, URL);
             photo_taken = true;
 
 

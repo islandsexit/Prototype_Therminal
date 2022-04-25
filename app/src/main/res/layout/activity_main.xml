@@ -370,13 +370,13 @@
         android:id="@+id/javaCameraView"
         android:layout_width="94dp"
         android:layout_height="82dp"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintBottom_toBottomOf="@+id/SETTINGS"
+        app:layout_constraintStart_toStartOf="@+id/SETTINGS"
+        app:layout_constraintTop_toTopOf="@+id/SETTINGS"
         app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/SETTINGS"
         android:layout_width="94dp"
         android:layout_height="82dp"
         android:layout_marginStart="4dp"

@@ -1,9 +1,12 @@
 package com.example.prototype_therminal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,7 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     public static final String APP_TAG = "retrofit-json-variable";
-    private static final String BASE_URL = "http://192.168.48.131:8000/";
+    private static String BASE_URL = "";
 
     CameraBridgeViewBase cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
@@ -79,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private static final long TIMER_INTERVAL = 1000L;
 
     private CountDownTimer mCountDownTimer;
+
+    private ConstraintLayout SETTINGS;
+    int COUNT_FOR_SETTINGS = 0;
+    private SharedPreferences sp;
 
 
     private Button btn_1;
@@ -209,6 +216,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SETTINGS = findViewById(R.id.SETTINGS);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        BASE_URL = sp.getString("ipget", "");
+
+
+
         mCountDownTimer = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
 
             @Override
@@ -218,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
             @Override
             public void onFinish() {
+                COUNT_FOR_SETTINGS=0;
                 Intent intent = new Intent(MainActivity.this, ScreenSaver.class);
                 startActivity(intent);
             }
@@ -659,11 +673,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         Result_TV = findViewById(R.id.RESULT_TV);
 
 
-        if(debag == true){
-            name_txt = "Test";
-            id_txt = "81";
-            goNewView();
-        }
         btn_sbmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -818,11 +827,33 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             }
         });
 
+        SETTINGS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                COUNT_FOR_SETTINGS++;
+                if(COUNT_FOR_SETTINGS==10 && invite_code_ET.getText().toString().equals("5") && invite_code_ET1.getText().toString().equals("6") && invite_code_ET2.getText().toString().equals("8")){
+                    COUNT_FOR_SETTINGS=0;
+                    Intent intent = new Intent(MainActivity.this, Dettings.class);
+
+                    // показываем новое Activity
+                    startActivity(intent);
+                }
+
+
+            }
+        });
+
     }
 
     private void get_code(){
          invite_code = invite_code_ET.getText().toString() + invite_code_ET1.getText().toString() + invite_code_ET2.getText().toString() + invite_code_ET3.getText().toString() + invite_code_ET4.getText().toString() + invite_code_ET5.getText().toString();
          Log.i(APP_TAG, "CODE: "+invite_code);
+        COUNT_FOR_SETTINGS=0;
+        if(debag==true){
+            name_txt = "Test";
+            id_txt = "81";
+            goNewView();
+        }
     }
 
 
