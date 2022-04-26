@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -47,6 +50,8 @@ public class ScreenSaver extends AppCompatActivity implements CameraBridgeViewBa
     private File                   mCascadeFile;
     private CascadeClassifier      mJavaDetector;
 
+    private ImageView logo;
+
 
     private float                  mRelativeFaceSize   = 0.5f;
     private int                    mAbsoluteFaceSize   = 0;
@@ -60,6 +65,8 @@ public class ScreenSaver extends AppCompatActivity implements CameraBridgeViewBa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_saver);
+        logo = findViewById(R.id.IV_LOGO);
+        Glide.with(ScreenSaver.this).asGif().load(R.drawable.logogif).into(logo);
 
         cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.javaCameraView2);
 //        cameraBridgeViewBase.setVisibility(View.VISIBLE);

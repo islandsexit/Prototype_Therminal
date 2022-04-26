@@ -16,6 +16,7 @@ public class Dettings extends AppCompatActivity {
     private EditText ET_WHERE;
     private EditText ET_IPGET;
     private EditText ET_IPPOST;
+    private EditText ET_TEL;
 
     private Button BTN_SAVE;
     private Button BTN_HOME;
@@ -32,14 +33,17 @@ public class Dettings extends AppCompatActivity {
         ET_IPGET = findViewById(R.id.ET_IPGET);
         ET_IPPOST = findViewById(R.id.ET_IPPOST);
         BTN_HOME = findViewById(R.id.BTN_HOME);
+        ET_TEL = findViewById(R.id.telephone);
 
         String where = sp.getString("where", "Подъезд номер ");
         String ipget = sp.getString("ipget", "http://192.168.48.131:8000/");
         String ippost = sp.getString("ippost", "http://192.168.48.144:8080");
+        String tel = sp.getString("tel", "+7");
 
         ET_IPPOST.setText( ippost, TextView.BufferType.EDITABLE);
         ET_WHERE.setText( where, TextView.BufferType.EDITABLE);
         ET_IPGET.setText( ipget, TextView.BufferType.EDITABLE);
+        ET_TEL.setText( tel, TextView.BufferType.EDITABLE);
 
         BTN_SAVE.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +52,7 @@ public class Dettings extends AppCompatActivity {
                 e.putString("where", ET_WHERE.getText().toString());
                 e.putString("ipget", ET_IPGET.getText().toString());
                 e.putString("ippost", ET_IPPOST.getText().toString());
+                e.putString("tel", ET_TEL.getText().toString());
                 e.commit();
             }
         });

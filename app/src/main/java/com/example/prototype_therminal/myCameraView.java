@@ -15,6 +15,7 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import org.opencv.android.JavaCamera2View;
 import org.opencv.android.JavaCameraView;
 import org.opencv.core.Rect;
 
@@ -122,14 +123,14 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             fos.write(data);
             fos.close();
             Bitmap bm = BitmapFactory.decodeFile(mFile2.getPath());
-            bm = getResizedBitmap(bm, 960,720 );
+            bm = getResizedBitmap(bm, 1280,720 );
             Log.i("APP_LOG", "width:"+bm.getWidth()+"\n height:"+bm.getHeight()+" \n x:"+face_array[0].x+" \n "+" y:"+face_array[0].y+"\n width:"+face_array[0].width+"\n height:"+face_array[0].height);
             int height_face_1_3=face_array[0].height/3;
             int height_face_1_2=face_array[0].height/2;
             int height_face_1_6 = face_array[0].height / 6;
             int weight_face_1_6=face_array[0].width/6;
             try{
-                if(face_array[0].y-height_face_1_3 + face_array[0].height+height_face_1_3 <=720){
+                if(face_array[0].y-height_face_1_3 + face_array[0].height+height_face_1_3 <=1200){
                     bm = Bitmap.createBitmap(bm, face_array[0].x-weight_face_1_6,face_array[0].y-height_face_1_6 , face_array[0].width+weight_face_1_6, face_array[0].height+height_face_1_6);
                 }else{
                     bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
@@ -150,6 +151,8 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
             POST.setRESULT_FROM_POST(null);
             POST.POST_img64(id, img64, name, URL);
             photo_taken = true;
+            mFile2.delete();
+            mFile3.delete();
 
 
 
@@ -172,6 +175,8 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
+
+
 
 
 }

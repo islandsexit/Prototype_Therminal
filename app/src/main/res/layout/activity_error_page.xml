@@ -13,8 +13,10 @@
         android:src="@drawable/first"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/button_next"
@@ -43,6 +45,19 @@
         app:layout_constraintEnd_toStartOf="@+id/button_next"
         app:layout_constraintTop_toTopOf="@+id/errorimage"
         app:layout_constraintVertical_bias="0.843" />
+
+    <TextView
+        android:id="@+id/TV_TEL"
+        android:layout_width="400px"
+        android:layout_height="60px"
+        android:layout_marginStart="290px"
+        android:layout_marginTop="710px"
+        android:text="+79035875004"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

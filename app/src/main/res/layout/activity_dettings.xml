@@ -10,12 +10,12 @@
         android:id="@+id/ET_WHERE"
         android:layout_width="333dp"
         android:layout_height="50dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="128dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Подъезд номер"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,28 +30,18 @@
         app:layout_constraintStart_toStartOf="@+id/ET_WHERE"
         app:layout_constraintTop_toBottomOf="@+id/ET_WHERE" />
 
-    <EditText
-        android:id="@+id/ET_IPPOST"
-        android:layout_width="333dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="http://192.168.48.144:8080"
-        app:layout_constraintStart_toStartOf="@+id/ET_IPGET"
-        app:layout_constraintTop_toBottomOf="@+id/ET_IPGET" />
-
     <Button
         android:id="@+id/BTN_SAVE"
         style="@style/MaterialAlertDialog.Material3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/orange"
         android:text="Сохранить настройки"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_IPPOST" />
+        app:layout_constraintTop_toBottomOf="@+id/telephone" />
 
     <Button
         android:id="@+id/BTN_HOME"
@@ -87,10 +77,41 @@
         android:id="@+id/TV_IPPOST"
         android:layout_width="143dp"
         android:layout_height="19dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
         android:text="IP сервера VIGFACE"
         app:layout_constraintEnd_toStartOf="@+id/ET_IPPOST"
         app:layout_constraintTop_toTopOf="@+id/ET_IPPOST" />
+
+    <EditText
+        android:id="@+id/ET_IPPOST"
+        android:layout_width="333dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="http://192.168.48.144:8080"
+        app:layout_constraintStart_toStartOf="@+id/ET_IPGET"
+        app:layout_constraintTop_toBottomOf="@+id/ET_IPGET" />
+
+    <EditText
+        android:id="@+id/telephone"
+        android:layout_width="336dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="@+id/ET_IPPOST"
+        app:layout_constraintTop_toBottomOf="@+id/ET_IPPOST" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:text="Контактый телефон"
+        app:layout_constraintEnd_toStartOf="@+id/telephone"
+        app:layout_constraintTop_toTopOf="@+id/telephone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

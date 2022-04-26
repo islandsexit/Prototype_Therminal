@@ -8,65 +8,50 @@
 
     <com.example.prototype_therminal.myCameraView
         android:id="@+id/myCameraView"
-        android:layout_width="960px"
-        android:layout_height="720px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:rotationY="180"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.501" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
-        android:layout_width="960px"
-        android:layout_height="720px"
-        android:src="@drawable/face5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/face6"
+
 
 
         app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
         app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/load"
-        android:layout_width="720px"
-        android:layout_height="720px"
 
-
-        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
-        app:layout_constraintEnd_toEndOf="@+id/myCameraView"
-        app:layout_constraintStart_toStartOf="@+id/myCameraView" />
-
-
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageViewCirc"
-        android:layout_width="960px"
-        android:layout_height="720px"
-        android:src="@drawable/circ"
-
-
-        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
-        app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/Done"
-        android:layout_width="960px"
-        android:layout_height="720px"
+        android:layout_width="1000px"
+        android:layout_height="1000px"
         android:src="@drawable/done"
 
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/myCameraView"
-        app:layout_constraintEnd_toEndOf="@+id/myCameraView" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/TV_RESULT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
         android:text="TextView"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/myCameraView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_home"
@@ -93,9 +78,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myCameraView"
-        app:layout_constraintVertical_bias="0.366" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/hint"

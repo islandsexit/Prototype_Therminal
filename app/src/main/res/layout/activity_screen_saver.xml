@@ -6,34 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".ScreenSaver">
 
-
     <org.opencv.android.JavaCameraView
         android:id="@+id/javaCameraView2"
         android:layout_width="418dp"
         android:layout_height="108dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.506" />
+        app:layout_constraintVertical_bias="0.375" />
 
     <TextClock
-    android:id="@+id/textClock2"
-    android:layout_width="440dp"
-    android:layout_height="121dp"
-    android:layout_centerHorizontal="true"
-    android:background="#FFFFFF"
-    android:clickable="true"
-    android:fontFamily="@font/montserrat_bold"
-    android:format12Hour="hh:mm"
-    android:format24Hour="hh:mm"
-    android:text="TextClock"
-    android:textAlignment="center"
-    android:textSize="96sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/textClock2"
+        android:layout_width="440dp"
+        android:layout_height="121dp"
+        android:layout_centerHorizontal="true"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:fontFamily="@font/montserrat_bold"
+        android:format12Hour="hh:mm"
+        android:format24Hour="hh:mm"
+        android:text="TextClock"
+        android:textAlignment="center"
+        android:textSize="96sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.366" />
+
+
+
+    <ImageView
+        android:id="@+id/IV_LOGO"
+        android:layout_width="852px"
+        android:layout_height="480px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textClock2"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

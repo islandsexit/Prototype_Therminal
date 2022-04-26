@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,9 +25,11 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
@@ -35,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.UUID;
 
 public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
@@ -78,7 +82,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private boolean count_for_proccessing = false;
 
     private ImageView img_face;
-    private ImageView img_circle;
+
     private ImageView img_done;
     private Button btn_error;
 
@@ -198,7 +202,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
          id = getIntent().getStringExtra("id");
          RESULT_TV = findViewById(R.id.TV_RESULT);
          hint = findViewById(R.id.hint);
-         img_circle = findViewById(R.id.appCompatImageViewCirc);
+
          img_face = findViewById(R.id.appCompatImageView);
          img_done = findViewById(R.id.Done);
 //        ImageView imageView = (ImageView) findViewById(R.id.load);
@@ -285,8 +289,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 //        cameraBridgeViewBase.setVisibility(View.VISIBLE);
         cameraBridgeViewBase.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);
 
+
         cameraBridgeViewBase.setCvCameraViewListener( Photo.this);
-        cameraBridgeViewBase.setMaxFrameSize(1280, 720);
+
 
         baseLoaderCallback = new BaseLoaderCallback(Photo.this) {
 
@@ -330,7 +335,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             e.printStackTrace();
                             Log.e(TAG, "Failed to load cascade. Exception thrown: " + e);
                         }
-
+                        cameraBridgeViewBase.setMaxFrameSize(3000, 2000);
+                        cameraBridgeViewBase.setMinimumHeight(1600);
+                        cameraBridgeViewBase.setMinimumWidth(1200);
                         cameraBridgeViewBase.enableView();
                     }
                     default:
@@ -368,7 +375,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                                 cameraBridgeViewBase.setVisibility(View.INVISIBLE);
                                 img_done.setImageResource(R.drawable.error);
                                 img_done.setVisibility(View.VISIBLE);
-                                img_circle.setVisibility(View.GONE);
+
                                 img_face.setVisibility(View.GONE);
                                 RESULT_TV.setText("Невозможно  завершить сканирование \n Обратитесь к администратору");
                                 count_for_error=0;
@@ -389,7 +396,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                     cameraBridgeViewBase.disableView();
                     cameraBridgeViewBase.setVisibility(View.INVISIBLE);
                     img_done.setVisibility(View.VISIBLE);
-                    img_circle.setVisibility(View.GONE);
+
                     img_face.setVisibility(View.GONE);
                     mCountDownTimer.cancel();
                     mCountDownTimer2.cancel();
@@ -438,22 +445,32 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
         Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++) {
-//            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
-//            Log.i("MainActivity.this", "x:"+facesArray[0].x);
-//            Log.i("MainActivity.this", "y:"+facesArray[0].y);
+
+
+            Log.i("MainActivity.this", "y:"+facesArray[0].y);
 //            Log.i("MainActivity.this", "w:"+facesArray[0].width);
 //            Log.i("MainActivity.this", "h:"+facesArray[0].height);
+            Log.i("MainActivity.this", "x:"+facesArray[0].x);
+            Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(255,0,94,0), 20);
+            if(900>facesArray[i].x && facesArray[i].x>300 && facesArray[i].x+facesArray[i].width <950&& 150>facesArray[i].y && facesArray[i].y>100){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RESULT_TV.setText("Выполняется сканирование");
+                    }
+                });
+                Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(0,255,94,0), 20);
             Log.e(TAG, "face detected!");
             count++;
             if (can_take_photo) {
-                switch(count){
+                switch (count) {
                     case 30:
                         Log.i(TAG, "toast wait---------------------------------------------------------------------------------------------------");
 
                         //RESULT_TV.setText("Подождите");
                         mCountDownTimer2.cancel();
                         mCountDownTimer2.start();
-                        if(count_for_proccessing){
+                        if (count_for_proccessing) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -461,13 +478,12 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                                     count_for_proccessing = false;
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     RESULT_TV.setText("Выполняется сканирование");
-                                    count_for_proccessing =true;
+                                    count_for_proccessing = true;
                                 }
                             });
                         }
@@ -487,21 +503,22 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                         }
                         mCountDownTimer.cancel();
                         mCountDownTimer2.cancel();
-                          ///////disable view
+                        ///////disable view
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                               RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
+                                RESULT_TV.setText(cameraBridgeViewBase.POST.RESULT_FROM_POST);
                             }
                         });
 
 
-                        count=0;
+                        count = 0;
 
                         //RESULT_TV.setText("Фото сделано");
                         break;
                     default:
                 }
+            }
 //                if (count == 10) {
 //
 //                    cameraBridgeViewBase.setFace_array(facesArray);
