@@ -53,11 +53,15 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private String id;
     private String img64;
     private TextView RESULT_TV;
+    private TextView TV_SUCCESS;
     private String RESULT_FROM_POST;
     private String MSG_FROM_POST;
 
+    CountDownTimer mCountDownTimer3;
+
     private TextView hint;
     private Button btn_home;
+    private Button btn_success;
 
     myCameraView                   cameraBridgeViewBase;
     BaseLoaderCallback             baseLoaderCallback;
@@ -195,6 +199,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         btn_error = findViewById(R.id.btn_error);
+        btn_success = findViewById(R.id.btn_success);
+        TV_SUCCESS = findViewById(R.id.TV_SUCCESS);
+
 
 
 
@@ -226,6 +233,15 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
                  // показываем новое Activity
                  startActivity(intent);
+             }
+         });
+
+         btn_success.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                    mCountDownTimer3.cancel();
+                    Intent intent = new Intent(Photo.this, success.class);
+                    startActivity(intent);
              }
          });
 
@@ -357,7 +373,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         try{
             if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
 
-                if (cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                if (!cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -375,9 +391,11 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                                 cameraBridgeViewBase.setVisibility(View.INVISIBLE);
                                 img_done.setImageResource(R.drawable.error);
                                 img_done.setVisibility(View.VISIBLE);
+                                TV_SUCCESS.setVisibility(View.VISIBLE);
+                                TV_SUCCESS.setText("Проблемы с созданием нового посетителя");
 
                                 img_face.setVisibility(View.GONE);
-                                RESULT_TV.setText("Невозможно  завершить сканирование \n Обратитесь к администратору");
+                                RESULT_TV.setVisibility(View.VISIBLE);
                                 count_for_error=0;
                                 btn_error.setVisibility(View.VISIBLE);
 
@@ -396,21 +414,26 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                     cameraBridgeViewBase.disableView();
                     cameraBridgeViewBase.setVisibility(View.INVISIBLE);
                     img_done.setVisibility(View.VISIBLE);
+                    TV_SUCCESS.setVisibility(View.VISIBLE);
+                    TV_SUCCESS.setText("Спасибо ваш пропуск успешно создался");
 
                     img_face.setVisibility(View.GONE);
                     mCountDownTimer.cancel();
                     mCountDownTimer2.cancel();
-                    RESULT_TV.setText("Сканирование завершено.\n Можете проходить через турникеты по лицу");
-                    Handler new_view = new Handler();
-                    new_view.postDelayed(new Runnable() {
+                    RESULT_TV.setVisibility(View.GONE);
+                    btn_success.setVisibility(View.VISIBLE);
+                    mCountDownTimer3 = new CountDownTimer(50000L, 1000L){
+
                         @Override
-                        public void run() {
-                            goNewView();
+                        public void onTick(long l) {
+
                         }
-                    }, 10000);
 
-
-
+                        @Override
+                        public void onFinish() {
+                                    goNewView();
+                        }
+                    }.start();
                         }
                     });
 
@@ -452,13 +475,13 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 //            Log.i("MainActivity.this", "h:"+facesArray[0].height);
             Log.i("MainActivity.this", "x:"+facesArray[0].x);
             Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(255,0,94,0), 20);
-            if(900>facesArray[i].x && facesArray[i].x>300 && facesArray[i].x+facesArray[i].width <950&& 150>facesArray[i].y && facesArray[i].y>100){
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        RESULT_TV.setText("Выполняется сканирование");
-                    }
-                });
+            if(950>facesArray[i].x && facesArray[i].x>250 && facesArray[i].x+facesArray[i].width <1000&& 160>facesArray[i].y && facesArray[i].y>90){
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        RESULT_TV.setText("Выполняется сканирование");
+//                    }
+//                });
                 Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(0,255,94,0), 20);
             Log.e(TAG, "face detected!");
             count++;

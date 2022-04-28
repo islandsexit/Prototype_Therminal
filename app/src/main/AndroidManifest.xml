@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Prototype_Therminal"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".success"
+            android:exported="false" />
+        <activity
             android:name=".Dettings"
             android:exported="false" />
         <activity
