@@ -4,11 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.155" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/arrow.xml" value="0.2355" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/arrow_vector.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/border_code.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/btn_code.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/help_rectangle.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/hint_icon.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/ic_launcher_background.xml" value="0.155" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/progress_orange.xml" value="0.1295" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_input.xml" value="0.1745" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_keyboard.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/separator_code.xml" value="0.1745" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_dettings.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_error_page.xml" value="0.5472636815920398" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_hint.xml" value="0.28953871499176276" />
-        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_main.xml" value="0.3020833333333333" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_photo.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_screen_saver.xml" value="0.2899505766062603" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_settings.xml" value="0.28665568369028005" />

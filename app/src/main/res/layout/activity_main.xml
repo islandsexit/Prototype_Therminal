@@ -8,37 +8,146 @@
     tools:layout_editor_absoluteX="-5dp"
     tools:layout_editor_absoluteY="10dp">
 
-
-    <Button
-        android:id="@+id/hint"
-        style="@style/MaterialAlertDialog.Material3"
-        android:layout_width="117dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/orange"
-        android:text="Инструкция"
+    <ImageButton
+        android:id="@+id/hint_icon"
+        android:layout_width="150px"
+        android:layout_height="150px"
+        android:layout_marginTop="33px"
+        android:layout_marginEnd="70px"
+        android:backgroundTint="@color/white"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hint_icon"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_third" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/SETTINGS"
+        android:layout_width="94dp"
+        android:layout_height="82dp"
+        android:foreground="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <org.opencv.android.JavaCameraView
+            android:id="@+id/javaCameraView"
+            android:layout_width="94dp"
+            android:layout_height="82dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/progress_first"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:layout_marginStart="63px"
+        android:background="@drawable/progress_orange"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/progress_second"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:backgroundTint="#DBDBDB"
+        android:background="@drawable/progress_orange"
+        app:layout_constraintStart_toEndOf="@+id/progress_first"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/progress_third"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:backgroundTint="#DBDBDB"
+        android:background="@drawable/progress_orange"
+        app:layout_constraintStart_toEndOf="@+id/progress_second"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="546dp"
-        android:layout_height="236dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_width="1173px"
+        android:layout_height="199px"
+        android:layout_marginStart="401px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RESULT_TV">
+
+        <View
+            android:id="@+id/border_code"
+            android:layout_width="1173px"
+            android:layout_height="199px"
+            android:background="@drawable/border_code"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/rectangle_1"
+            android:layout_width="139px"
+            android:layout_height="139px"
+
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET" />
+
+        <View
+            android:id="@+id/rectangle_2"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET1"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET1" />
+
+        <View
+            android:id="@+id/rectangle_3"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET2"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET2" />
+
+        <View
+            android:id="@+id/rectangle_4"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET3"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET3" />
+
+        <View
+            android:id="@+id/rectangle_5"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET4"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET4" />
+
+        <View
+            android:id="@+id/rectangle_6"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:background="@drawable/rectangle_input"
+            app:layout_constraintBottom_toBottomOf="@+id/invite_code_ET5"
+            app:layout_constraintStart_toStartOf="@+id/invite_code_ET5" />
+
+        <View
+            android:id="@+id/separator_code"
+            android:layout_width="80px"
+            android:layout_height="21px"
+            android:layout_marginStart="28.8px"
+            android:layout_marginTop="89px"
+            android:background="@drawable/separator_code"
+            app:layout_constraintStart_toEndOf="@+id/rectangle_3"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
+
             android:id="@+id/invite_code_ET"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="48px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -46,20 +155,23 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+
+
+            android:theme="@style/invite_code_style"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/invite_code_ET2"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="25.77px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -67,21 +179,21 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+            android:theme="@style/invite_code_style"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET1"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/invite_code_ET4"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="104dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="25.77px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -89,24 +201,24 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+            android:theme="@style/invite_code_style"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/invite_code_ET1"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="25.77px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -114,21 +226,22 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+            android:theme="@style/invite_code_style"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <EditText
             android:id="@+id/invite_code_ET5"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="25.77px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -136,20 +249,21 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+            android:theme="@style/invite_code_style"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET4"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/invite_code_ET3"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="139px"
+            android:layout_height="139px"
+            android:layout_marginStart="28.8px"
+            android:layout_marginTop="30.66px"
             android:editable="false"
             android:ems="10"
             android:enabled="false"
             android:fadeScrollbars="true"
-            android:hint="*"
+            android:hint=""
             android:inputType="number"
             android:maxLength="1"
             android:textAlignment="center"
@@ -157,15 +271,16 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
-            app:layout_constraintStart_toEndOf="@+id/invite_code_ET_Hidden"
+            android:theme="@style/invite_code_style"
+            app:layout_constraintStart_toEndOf="@+id/separator_code"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/invite_code_ET_Hidden"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="20dp"
             android:clickable="false"
             android:editable="false"
             android:ems="10"
@@ -180,18 +295,8 @@
             android:textColor="#000000"
             android:textIsSelectable="false"
             android:textSize="34sp"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/invite_code_ET2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/RESULT_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Введите 6 значный код для входа на территорию"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -199,195 +304,369 @@
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/constraintLayout"
-        android:layout_width="657dp"
-        android:layout_height="234dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.812">
+        android:layout_width="1173px"
+        android:layout_height="667.06px"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+        <View
+            android:id="@+id/rectangle_keyboard"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/rectangle_keyboard1"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@+id/rectangle_keyboard"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/rectangle_keyboard2"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@+id/rectangle_keyboard1"
+            app:layout_constraintTop_toTopOf="parent"
+             />
+
+        <View
+            android:id="@+id/rectangle_keyboard3"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard" />
+
+        <View
+            android:id="@+id/rectangle_keyboard4"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard3"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard1" />
+
+        <View
+            android:id="@+id/rectangle_keyboard5"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard4"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard2" />
+
+        <View
+            android:id="@+id/rectangle_keyboard6"
+            android:layout_width="391.14px"
+            android:layout_height="165.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard3" />
+
+        <View
+            android:id="@+id/rectangle_keyboard7"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard6"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard4" />
+        <View
+            android:id="@+id/rectangle_keyboard8"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard7"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard5" />
+
+        <View
+            android:id="@+id/rectangle_keyboard9"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/help_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/rectangle_keyboard10"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard9"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard8" />
+        <View
+            android:id="@+id/rectangle_keyboard11"
+            android:layout_width="391.14px"
+            android:layout_height="166.76px"
+            android:background="@drawable/rectangle_keyboard"
+            app:layout_constraintStart_toEndOf="@id/rectangle_keyboard10"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_keyboard8" />
 
         <Button
-            android:backgroundTint="@color/orange"
             android:id="@+id/btn_sbmt"
             style="@style/Widget.Material3.Button"
             android:layout_width="170dp"
             android:layout_height="85dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/orange"
             android:text="ВОЙТИ"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/button5"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="815dp"
+            tools:layout_editor_absoluteY="20dp"
+            android:visibility="gone"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_X"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="170dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="45dp"
-            android:text="X"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/button_0"
-            app:layout_constraintTop_toBottomOf="@+id/btn_sbmt"
-            tools:ignore="MissingConstraints" />
+            style="@style/PurpleButton"
+            android:layout_width="230px"
+            android:layout_height="100px"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/white"
+
+            android:src="@drawable/arrow_2"
+            android:scaleType="fitCenter"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard11"
+
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard11"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard11" />
 
         <Button
             android:id="@+id/button_0"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="45dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="0"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button9"
-            app:layout_constraintTop_toBottomOf="@+id/button5" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard10"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard10"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard10" />
 
         <Button
             android:id="@+id/button3"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="20dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="3"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button2"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard2"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard2" />
 
         <Button
             android:id="@+id/button2"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="20dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="2"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard1"
+            app:layout_constraintStart_toEndOf="@+id/rectangle_keyboard"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard1" />
 
         <Button
             android:id="@+id/button4"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="20dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="4"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button3"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintStart_toStartOf="@id/rectangle_keyboard3"
+            app:layout_constraintEnd_toEndOf="@id/rectangle_keyboard3"
+            app:layout_constraintTop_toTopOf="@id/rectangle_keyboard3"
+            />
 
         <Button
             android:id="@+id/button6"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-
-            android:layout_marginTop="45dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="6"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard5"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard5"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard5" />
 
         <Button
             android:id="@+id/button"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginTop="20dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="1"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button8"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="45dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="8"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button7"
-            app:layout_constraintTop_toBottomOf="@+id/button3" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard7"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard7"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard7"/>
 
         <Button
             android:id="@+id/button7"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="45dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="7"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button6"
-            app:layout_constraintTop_toBottomOf="@+id/button2" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard6"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard6"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard6" />
 
         <Button
             android:id="@+id/button5"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="20dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="5"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button4"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard4"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard4"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard4" />
 
         <Button
             android:id="@+id/button9"
-            android:backgroundTint="@color/orange"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="80dp"
-            android:layout_height="85dp"
-
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="45dp"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/inter_extrabold"
+            android:gravity="center_horizontal|top"
+            android:lineHeight="116.18px"
             android:text="9"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/button8"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textFontWeight="800"
+            android:textSize="96px"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard8"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard8"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard8" />
+
+        <Button
+            android:id="@+id/hint"
+            style="@style/PurpleButton"
+            android:layout_width="350px"
+            android:layout_height="150px"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="#00FFFFFF"
+            android:drawablePadding="0dp"
+            android:fontFamily="@font/inter_extrabold"
+            app:lineHeight="128px"
+            android:textSize="96px"
+            android:lineSpacingExtra="0px"
+
+
+
+            android:text="?"
+
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textFontWeight="800"
+
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_keyboard9"
+
+            app:layout_constraintStart_toStartOf="@+id/rectangle_keyboard9"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_keyboard9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/javaCameraView"
-        android:layout_width="94dp"
-        android:layout_height="82dp"
-        app:layout_constraintBottom_toBottomOf="@+id/SETTINGS"
-        app:layout_constraintStart_toStartOf="@+id/SETTINGS"
-        app:layout_constraintTop_toTopOf="@+id/SETTINGS"
-        app:layout_constraintVertical_bias="1.0" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/SETTINGS"
-        android:layout_width="94dp"
-        android:layout_height="82dp"
-        android:layout_marginStart="4dp"
-        android:foreground="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/RESULT_TV"
+        android:layout_width="783px"
+        android:layout_height="94px"
+        android:layout_marginStart="596px"
+        android:layout_marginTop="61px"
+        android:text="Оформление пропуска"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="64px"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-
+        app:layout_constraintTop_toBottomOf="@+id/progress_first" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

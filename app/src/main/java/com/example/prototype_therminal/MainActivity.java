@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private Button btn_9;
     private Button btn_0;
 
-    private Button btn_X;
+    private ImageButton btn_X;
 
     private Button btn_sbmt;
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private String name_txt;
     private String id_txt;
     private TextView Result_TV;
-    private Boolean debag = true;
+    private Boolean debag = false;
     // To keep track of activity's window focus
     boolean currentFocus;
     private Button btn_hint;
