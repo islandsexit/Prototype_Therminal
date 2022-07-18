@@ -2,9 +2,11 @@ package com.example.prototype_therminal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.media.ExifInterface;
@@ -62,6 +64,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private TextView hint;
     private Button btn_home;
     private Button btn_success;
+    private Button btn_done;
+
+    private View fill_white;
 
     myCameraView                   cameraBridgeViewBase;
     BaseLoaderCallback             baseLoaderCallback;
@@ -91,6 +96,10 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private Button btn_error;
 
     private int count_for_error = 0;
+
+    private View progress_third;
+    private View progress_third_orange;
+
 
 
 
@@ -126,6 +135,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
                     // Use reflection to trigger a method from 'StatusBarManager'
 
+                    @SuppressLint("WrongConstant")
                     Object statusBarService = getSystemService("statusbar");
                     Class<?> statusBarManager = null;
 
@@ -201,6 +211,21 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         btn_error = findViewById(R.id.btn_error);
         btn_success = findViewById(R.id.btn_success);
         TV_SUCCESS = findViewById(R.id.TV_SUCCESS);
+        progress_third = findViewById(R.id.progress_third);
+        progress_third_orange = findViewById(R.id.progress_third_orange);
+        progress_third_orange.setVisibility(View.GONE);
+        fill_white = findViewById(R.id.rectangle_fill_white);
+        img_done = findViewById(R.id.Done);
+        img_done.setVisibility(View.GONE);
+        btn_done = findViewById(R.id.btn_done);
+        btn_done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goNewView();
+                btn_done.setEnabled(false);
+            }
+        });
+
 
 
 
@@ -245,7 +270,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
              }
          });
 
-         RESULT_TV.setText("Пожалуйста стойте по границам");
+         RESULT_TV.setText("Пожалуйста смотрите в камеру");
 
 
 
@@ -293,7 +318,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        RESULT_TV.setText("Встаньте ровно по рисунку");
+                        RESULT_TV.setText("Встаньте ровно по центру");
                     }
                 });
 
@@ -377,7 +402,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(count_for_error<=5) {
+                            if(count_for_error<=4) {
                                 RESULT_TV.setText("Повторное сканирование");
                                 cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
                                 ////////TODO вот тут берутся значения message from post
@@ -385,19 +410,20 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                                 count_for_error++;
                             }
                             else{
+                                //todo error page
                                 RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
                                 cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
                                 cameraBridgeViewBase.disableView();
                                 cameraBridgeViewBase.setVisibility(View.INVISIBLE);
-                                img_done.setImageResource(R.drawable.error);
-                                img_done.setVisibility(View.VISIBLE);
-                                TV_SUCCESS.setVisibility(View.VISIBLE);
-                                TV_SUCCESS.setText("Проблемы с созданием нового посетителя");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(Photo.this, HintActivity.class);
+                                        // показываем новое Activity
+                                        startActivity(intent);
+                                    }
+                                });
 
-                                img_face.setVisibility(View.GONE);
-                                RESULT_TV.setVisibility(View.VISIBLE);
-                                count_for_error=0;
-                                btn_error.setVisibility(View.VISIBLE);
 
                             }
 
@@ -411,13 +437,20 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                         public void run() {
                     RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
                     cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                    progress_third.setBackgroundColor(Color.parseColor("#DBDBDB"));
                     cameraBridgeViewBase.disableView();
                     cameraBridgeViewBase.setVisibility(View.INVISIBLE);
-                    img_done.setVisibility(View.VISIBLE);
-                    TV_SUCCESS.setVisibility(View.VISIBLE);
-                    TV_SUCCESS.setText("Спасибо ваш пропуск успешно создался");
+                    //img_done.setVisibility(View.VISIBLE);
 
-                    img_face.setVisibility(View.GONE);
+                    btn_done.setVisibility(View.VISIBLE);
+                    btn_home.setVisibility(View.GONE);
+                    fill_white.setVisibility(View.VISIBLE);
+                    img_done.setVisibility(View.VISIBLE);
+                    progress_third_orange.setVisibility(View.VISIBLE);
+//                    TV_SUCCESS.setVisibility(View.VISIBLE);
+//                    TV_SUCCESS.setText("Спасибо ваш пропуск успешно создался");
+
+
                     mCountDownTimer.cancel();
                     mCountDownTimer2.cancel();
                     RESULT_TV.setVisibility(View.GONE);
@@ -474,15 +507,15 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 //            Log.i("MainActivity.this", "w:"+facesArray[0].width);
 //            Log.i("MainActivity.this", "h:"+facesArray[0].height);
             Log.i("MainActivity.this", "x:"+facesArray[0].x);
-            Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(255,0,94,0), 20);
-            if(950>facesArray[i].x && facesArray[i].x>250 && facesArray[i].x+facesArray[i].width <1000&& 160>facesArray[i].y && facesArray[i].y>90){
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        RESULT_TV.setText("Выполняется сканирование");
-//                    }
-//                });
-                Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(0,255,94,0), 20);
+//            Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(255,0,94,0), 20);
+//            if(950>facesArray[i].x && facesArray[i].x>250 && facesArray[i].x+facesArray[i].width <1000&& 160>facesArray[i].y && facesArray[i].y>90){
+////                runOnUiThread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        RESULT_TV.setText("Выполняется сканирование");
+////                    }
+////                });
+//                Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(0,255,94,0), 20);
             Log.e(TAG, "face detected!");
             count++;
             if (can_take_photo) {
@@ -497,7 +530,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    RESULT_TV.setText("Встаньте ровно по рисунку");
+                                    RESULT_TV.setText("Смотрите в камеру");
                                     count_for_proccessing = false;
                                 }
                             });
@@ -505,7 +538,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    RESULT_TV.setText("Выполняется сканирование");
+                                    RESULT_TV.setText("Выполняется сканирование...");
                                     count_for_proccessing = true;
                                 }
                             });
@@ -536,6 +569,43 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
 
                         count = 0;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
+                                cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
+                                progress_third.setBackgroundColor(Color.parseColor("#DBDBDB"));
+                                cameraBridgeViewBase.disableView();
+                                cameraBridgeViewBase.setVisibility(View.INVISIBLE);
+                                //img_done.setVisibility(View.VISIBLE);
+
+                                btn_done.setVisibility(View.VISIBLE);
+                                btn_home.setVisibility(View.GONE);
+                                fill_white.setVisibility(View.VISIBLE);
+                                img_done.setVisibility(View.VISIBLE);
+                                progress_third_orange.setVisibility(View.VISIBLE);
+//                    TV_SUCCESS.setVisibility(View.VISIBLE);
+//                    TV_SUCCESS.setText("Спасибо ваш пропуск успешно создался");
+
+
+                                mCountDownTimer.cancel();
+                                mCountDownTimer2.cancel();
+                                RESULT_TV.setVisibility(View.GONE);
+                                btn_success.setVisibility(View.VISIBLE);
+                                mCountDownTimer3 = new CountDownTimer(50000L, 1000L){
+
+                                    @Override
+                                    public void onTick(long l) {
+
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        goNewView();
+                                    }
+                                }.start();
+                            }
+                        });
 
                         //RESULT_TV.setText("Фото сделано");
                         break;
@@ -554,7 +624,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 //
 //                }
 
-            }
+
 
         }
 
@@ -601,6 +671,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         super.onDestroy();
         if (cameraBridgeViewBase!=null){
             cameraBridgeViewBase.disableView();
+
         }
     }
     public static Bitmap rotateBitmap(Bitmap srcBitmap, String path) {
@@ -658,6 +729,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     public void onPause() {
         super.onPause();
         cameraBridgeViewBase.disableView();
+        mCountDownTimer3.cancel();
+        mCountDownTimer2.cancel();
+        mCountDownTimer.cancel();
 
     }
 

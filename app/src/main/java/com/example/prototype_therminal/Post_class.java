@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Post_class {
     public String RESULT_FROM_POST;
     public String MSG_FROM_POST;
-    public boolean debag = true;
+    public boolean debag = false;
 
     public void setRESULT_FROM_POST(String RESULT_FROM_POST) {
         this.RESULT_FROM_POST = RESULT_FROM_POST;

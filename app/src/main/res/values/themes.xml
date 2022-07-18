@@ -18,8 +18,8 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="PurpleButton" parent="@style/Widget.Material3.Button">
-        <item name="colorButtonNormal">#4c98f5</item>
-        <item name="colorControlHighlight">#79b2f7</item>
+        <item name="colorButtonNormal">#EF7D00</item>
+        <item name="colorControlHighlight">#EF7D00</item>
         <item name="cornerRadius">0dp</item>
     </style>
     <style name="mybuttonstyle" parent="@android:style/Widget.Button">

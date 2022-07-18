@@ -8,16 +8,22 @@
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/arrow_vector.xml" value="0.28" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/border_code.xml" value="0.28" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/btn_code.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/done.xml" value="0.2795" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/help_rectangle.xml" value="0.28" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/hint_icon.xml" value="0.33" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/hint_popup.xml" value="0.28" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/ic_launcher_background.xml" value="0.155" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/progress_orange.xml" value="0.1295" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_face.xml" value="0.1965" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_fill_white.xml" value="2.0" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_input.xml" value="0.1745" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectangle_keyboard.xml" value="0.28" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/rectanglr_hint.xml" value="0.2795" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/drawable/separator_code.xml" value="0.1745" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/font/inter_bold.xml" value="0.18492586490939045" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_dettings.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_error_page.xml" value="0.5472636815920398" />
-        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_hint.xml" value="0.28953871499176276" />
+        <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_hint.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_photo.xml" value="0.33" />
         <entry key="..\:/Projects/Prototype_Therminal/app/src/main/res/layout/activity_screen_saver.xml" value="0.2899505766062603" />

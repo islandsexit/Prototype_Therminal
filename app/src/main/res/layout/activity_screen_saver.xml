@@ -10,33 +10,33 @@
         android:id="@+id/javaCameraView2"
         android:layout_width="418dp"
         android:layout_height="108dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.375" />
+        app:layout_constraintBottom_toBottomOf="@+id/text_greeting"
+        app:layout_constraintEnd_toEndOf="@+id/text_greeting"
+        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintStart_toStartOf="@+id/text_greeting"
+        app:layout_constraintTop_toTopOf="@+id/text_greeting"
+        app:layout_constraintVertical_bias="0.482" />
 
-    <TextClock
-        android:id="@+id/textClock2"
-        android:layout_width="440dp"
-        android:layout_height="121dp"
-        android:layout_centerHorizontal="true"
+    <TextView
+        android:id="@+id/text_greeting"
+        android:layout_width="1450px"
+        android:layout_height="464px"
         android:background="#FFFFFF"
-        android:clickable="true"
+        android:backgroundTint="@color/white"
         android:fontFamily="@font/montserrat_bold"
-        android:format12Hour="hh:mm"
-        android:format24Hour="hh:mm"
-        android:text="TextClock"
+        android:foregroundTint="@color/white"
+        android:lineHeight="232px"
+        android:text="@string/greeting"
         android:textAlignment="center"
-        android:textSize="96sp"
+        android:textColor="@color/orange"
+        android:textFontWeight="700"
+
+
+        android:textSize="145px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.366" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView
@@ -46,7 +46,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textClock2"
+        app:layout_constraintTop_toBottomOf="@+id/text_greeting"
+        android:visibility="gone"
          />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -102,7 +102,8 @@
         android:ems="10"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="@+id/ET_IPPOST"
-        app:layout_constraintTop_toBottomOf="@+id/ET_IPPOST" />
+        app:layout_constraintTop_toBottomOf="@+id/ET_IPPOST"
+        android:enabled="false"/>
 
     <TextView
         android:id="@+id/textView"

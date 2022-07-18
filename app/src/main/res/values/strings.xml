@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Prototype_Therminal</string>
+    <string name="app_name">VIG Face</string>
+    <string name="greeting">Рады вас видеть!Сделаем пропуск?</string>
+    <string name="hint_text">Введите код, полученный от лица, к которому направляетесь.</string>
 </resources>

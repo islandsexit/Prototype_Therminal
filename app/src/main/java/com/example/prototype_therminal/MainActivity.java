@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Array;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private ConstraintLayout SETTINGS;
     int COUNT_FOR_SETTINGS = 0;
     private SharedPreferences sp;
+
+    private ImageButton btn_hint_icon;
+    private ConstraintLayout hint_view;
 
 
     private Button btn_1;
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
                     // Use reflection to trigger a method from 'StatusBarManager'
 
+                    @SuppressLint("WrongConstant")
                     Object statusBarService = getSystemService("statusbar");
                     Class<?> statusBarManager = null;
 
@@ -157,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                         // API 17 onwards, the method to call is `collapsePanels()`
 
                         if (Build.VERSION.SDK_INT > 16) {
-                            collapseStatusBar = statusBarManager .getMethod("collapsePanels");
+                            collapseStatusBar = statusBarManager.getMethod("collapsePanels");
                         } else {
-                            collapseStatusBar = statusBarManager .getMethod("collapse");
+                            collapseStatusBar = statusBarManager.getMethod("collapse");
                         }
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
@@ -210,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         screensaver();
+        hint_view.setVisibility(View.GONE);
         return false;
     }
 
@@ -217,10 +226,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (checkSelfPermission(
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 2);
+        }
         SETTINGS = findViewById(R.id.SETTINGS);
+        btn_hint_icon = findViewById(R.id.hint_icon);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         BASE_URL = sp.getString("ipget", "");
-
+        hint_view = findViewById(R.id.hint_view);
+        hint_view.setVisibility(View.GONE);
 
 
         mCountDownTimer = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
@@ -324,29 +340,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         btn_8 = findViewById(R.id.button8);
         btn_9 = findViewById(R.id.button9);
         btn_0 = findViewById(R.id.button_0);
+        btn_X = findViewById(R.id.btn_X);
 
         btn_hint = findViewById(R.id.hint);
         btn_hint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, HintActivity.class);
-
-                // показываем новое Activity
-                startActivity(intent);
+                hint_view.setVisibility(View.VISIBLE);
             }
         });
 
-        btn_0.setClickable(true);
-        btn_9.setClickable(true);
-        btn_8.setClickable(true);
-        btn_7.setClickable(true);
-        btn_6.setClickable(true);
-        btn_5.setClickable(true);
-        btn_4.setClickable(true);
-        btn_3.setClickable(true);
-        btn_2.setClickable(true);
-        btn_1.setClickable(true);
-        btn_sbmt.setClickable(true);
+        btn_able(true);
 
 
 
@@ -354,317 +358,94 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_1.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_1.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_1.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_1.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_1.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_1.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_1);
             }
         });
         btn_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_2.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_2.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_2.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_2.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_2.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_2.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_2);
             }
         });
         btn_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_3.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_3.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_3.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_3.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_3.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_3.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_3);
             }
         });
         btn_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_4.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_4.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_4.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_4.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_4.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_4.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_4);
             }
         });
         btn_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_5.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_5.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_5.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_5.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_5.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_5.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_5);
             }
         });
         btn_6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_6.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_6.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_6.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_6.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_6.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_6.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_6);
             }
         });
         btn_7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_7.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_7.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_7.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_7.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_7.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_7.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_7);
             }
         });
         btn_8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_8.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_8.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_8.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_8.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_8.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_8.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_8);
             }
         });
         btn_9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_9.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_9.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_9.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_9.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_9.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_9.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_9);
             }
         });
         btn_0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                if(invite_code_ET.getText().toString().trim().matches("")){
-                    invite_code_ET.setText(btn_0.getText().toString());
-                    check_nums();
-
-                }
-                else if(invite_code_ET1.getText().toString().trim().matches("")){
-                    invite_code_ET1.setText(btn_0.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET2.getText().toString().trim().matches("")){
-                    invite_code_ET2.setText(btn_0.getText().toString());check_nums();
-
-                }
-                else if(invite_code_ET3.getText().toString().trim().matches("")){
-                    invite_code_ET3.setText(btn_0.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET4.getText().toString().trim().matches("")){
-                    invite_code_ET4.setText(btn_0.getText().toString());
-                    check_nums();
-                }
-                else if(invite_code_ET5.getText().toString().trim().matches("")){
-                    invite_code_ET5.setText(btn_0.getText().toString());
-                    check_nums();
-                }
+                input_num(btn_0);
             }
         });
 
-        btn_X = findViewById(R.id.btn_X);
-        btn_X.setClickable(true);
+
+
         btn_X.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screensaver();
-                invite_code_ET.setText("");
-                invite_code_ET1.setText("");
+                if(!invite_code_ET4.getText().toString().equals("")){
+                    invite_code_ET4.setText("");
+                }else if(!invite_code_ET3.getText().toString().equals("")){
+                    invite_code_ET3.setText("");
+                }else if(!invite_code_ET2.getText().toString().equals("")){
                 invite_code_ET2.setText("");
-                invite_code_ET3.setText("");
-                invite_code_ET4.setText("");
-                invite_code_ET5.setText("");
+            }else if(!invite_code_ET1.getText().toString().equals("")){
+                invite_code_ET1.setText("");
+            }else{invite_code_ET.setText("");}}
+        });
 
+        btn_hint_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hint_view.setVisibility(View.VISIBLE);
             }
         });
 
@@ -680,36 +461,13 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 screensaver();
                 get_code();
                 if (invite_code.length()!=6){
-                    Result_TV.setText("КОД НЕПОЛНЫЙ");
-                    Result_TV.setTextColor(Color.parseColor("red"));
-                    invite_code_ET.setText("");
-                    invite_code_ET1.setText("");
-                    invite_code_ET2.setText("");
-                    invite_code_ET3.setText("");
-                    invite_code_ET4.setText("");
-                    invite_code_ET5.setText("");
+                    change_text(Result_TV, "red", "Код неполный");
+                    code_del();
                 }else{
-                    Result_TV.setTextColor(Color.parseColor("gray"));
-                    Result_TV.setText("Проверяем ваш код...");
+                    change_text(Result_TV, "black", "Проверяем ваш код....");
                     loadProfile(invite_code);
-                    invite_code_ET.setText("");
-                    invite_code_ET1.setText("");
-                    invite_code_ET2.setText("");
-                    invite_code_ET3.setText("");
-                    invite_code_ET4.setText("");
-                    invite_code_ET5.setText("");
-                    btn_0.setClickable(false);
-                    btn_9.setClickable(false);
-                    btn_8.setClickable(false);
-                    btn_7.setClickable(false);
-                    btn_6.setClickable(false);
-                    btn_5.setClickable(false);
-                    btn_4.setClickable(false);
-                    btn_3.setClickable(false);
-                    btn_2.setClickable(false);
-                    btn_1.setClickable(false);
-                    btn_sbmt.setClickable(false);
-                    btn_X.setClickable(false);
+                    code_del();
+                    btn_able(false);
                 }
 
             }
@@ -787,35 +545,13 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 if(invite_code_ET5.length() == 1){
                     get_code();
                     if (invite_code.length()!=6){
-                        Result_TV.setText("КОД НЕПОЛНЫЙ");
-                        Result_TV.setTextColor(Color.parseColor("red"));
-                        invite_code_ET.setText("");
-                        invite_code_ET1.setText("");
-                        invite_code_ET2.setText("");
-                        invite_code_ET3.setText("");
-                        invite_code_ET4.setText("");
-                        invite_code_ET5.setText("");
+                        change_text(Result_TV, "red", "Код неполный");
+                        code_del();
                     }else{
-                        Result_TV.setText("Проверяем ваш код...");
-                        Result_TV.setTextColor(Color.parseColor("gray"));
+                        change_text(Result_TV, "black", "Проверяем ваш код...");
                         loadProfile(invite_code);
-                        invite_code_ET.setText("");
-                        invite_code_ET1.setText("");
-                        invite_code_ET2.setText("");
-                        invite_code_ET3.setText("");
-                        invite_code_ET4.setText("");
-                        invite_code_ET5.setText("");
-                        btn_0.setClickable(false);
-                        btn_9.setClickable(false);
-                        btn_8.setClickable(false);
-                        btn_7.setClickable(false);
-                        btn_6.setClickable(false);
-                        btn_5.setClickable(false);
-                        btn_4.setClickable(false);
-                        btn_3.setClickable(false);
-                        btn_2.setClickable(false);
-                        btn_1.setClickable(false);
-                        btn_sbmt.setClickable(false);
+                        code_del();
+                        btn_able(false);
 
 
 
@@ -859,6 +595,15 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
 
     private void loadProfile(String invite_code) {
+        change_text(Result_TV, "green", "Спасибо");
+        goNewView();//todo delete
+
+
+
+
+
+
+
         GsonBuilder gsonBuilder = new GsonBuilder();
 
 
@@ -886,31 +631,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                             if(RESULT.equals("SUCCESS")) {
                                 name_txt = name;
                                 id_txt = id;
-                                Result_TV.setText("Спасибо");
-                                Result_TV.setTextColor(Color.parseColor("green"));
+                                change_text(Result_TV, "green", "Спасибо");
 
                             }
                             else {
 
-                                    Result_TV.setText("Неправильный код");
-                                Result_TV.setTextColor(Color.parseColor("red"));
-                                btn_0.setClickable(true);
-                                btn_9.setClickable(true);
-                                btn_8.setClickable(true);
-                                btn_7.setClickable(true);
-                                btn_6.setClickable(true);
-                                btn_5.setClickable(true);
-                                btn_4.setClickable(true);
-                                btn_3.setClickable(true);
-                                btn_2.setClickable(true);
-                                btn_1.setClickable(true);
-                                btn_sbmt.setClickable(true);
-                                btn_X.setClickable(true);
+                                change_text(Result_TV, "red", "Неправильный код");
+                                btn_able(true);
                                 Handler hand = new Handler();
                                 hand.postDelayed(new Runnable() {
                                     public void run() {
-                                        Result_TV.setText("Введите 6 значный код для входа на территорию");
-                                        Result_TV.setTextColor(Color.parseColor("gray"));
+                                        change_text(Result_TV, "black", "Оформление пропуска");
                                     }
                                 }, 2000);
 
@@ -923,25 +654,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     } else {
                         Log.e(APP_TAG, "onResponse | status: " + statusCode);
                         runOnUiThread(()-> {
-                        Result_TV.setText("ОШИБКА");
-                        Result_TV.setTextColor(Color.parseColor("red"));
-                            btn_0.setClickable(true);
-                            btn_9.setClickable(true);
-                            btn_8.setClickable(true);
-                            btn_7.setClickable(true);
-                            btn_6.setClickable(true);
-                            btn_5.setClickable(true);
-                            btn_4.setClickable(true);
-                            btn_3.setClickable(true);
-                            btn_2.setClickable(true);
-                            btn_1.setClickable(true);
-                            btn_sbmt.setClickable(true);
-                            btn_X.setClickable(true);
+                            change_text(Result_TV, "red", "Ошибка");
+                            btn_able(true);
                             Handler hand = new Handler();
                             hand.postDelayed(new Runnable() {
                                 public void run() {
-                                    Result_TV.setText("Введите 6 значный код для входа на территорию");
-                                    Result_TV.setTextColor(Color.parseColor("gray"));
+                                    change_text(Result_TV, "black", "Оформление пропуска");
                                 }
                             }, 2000);
                         });
@@ -951,23 +669,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     runOnUiThread(()-> {
                         Result_TV.setText("ОШИБКА");
                         Result_TV.setTextColor(Color.parseColor("red"));
-                        btn_0.setClickable(true);
-                        btn_9.setClickable(true);
-                        btn_8.setClickable(true);
-                        btn_7.setClickable(true);
-                        btn_6.setClickable(true);
-                        btn_5.setClickable(true);
-                        btn_4.setClickable(true);
-                        btn_3.setClickable(true);
-                        btn_2.setClickable(true);
-                        btn_1.setClickable(true);
-                        btn_sbmt.setClickable(true);
-                        btn_X.setClickable(true);
+                        btn_able(true);
                         Handler hand = new Handler();
                         hand.postDelayed(new Runnable() {
                             public void run() {
-                                Result_TV.setText("Введите 6 значный код для входа на территорию");
-                                Result_TV.setTextColor(Color.parseColor("gray"));
+                                change_text(Result_TV, "black", "Оформление пропуска");
                             }
                         }, 2000);
                     });
@@ -979,23 +685,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 runOnUiThread(()->{
                     Result_TV.setText("Сервер недоступен");
                     Result_TV.setTextColor(Color.parseColor("red"));
-                    btn_0.setClickable(true);
-                    btn_9.setClickable(true);
-                    btn_8.setClickable(true);
-                    btn_7.setClickable(true);
-                    btn_6.setClickable(true);
-                    btn_5.setClickable(true);
-                    btn_4.setClickable(true);
-                    btn_3.setClickable(true);
-                    btn_2.setClickable(true);
-                    btn_1.setClickable(true);
-                    btn_sbmt.setClickable(true);
-                    btn_X.setClickable(true);
+                    btn_able(true);
                     Handler hand = new Handler();
                     hand.postDelayed(new Runnable() {
                         public void run() {
-                            Result_TV.setTextColor(Color.parseColor("gray"));
-                            Result_TV.setText("Введите 6 значный код для входа на территорию");
+                            change_text(Result_TV, "black", "Оформление пропуска");
 
                         }
                     }, 2000);
@@ -1009,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     public void goNewView(){
 
                 // Говорим между какими Activity будет происходить связь
-                Intent intent = new Intent(this, Photo.class);
+                Intent intent = new Intent(this, Photo.class);//todo go new view
 
                 // указываем первым параметром ключ, а второе значение
                 // по ключу мы будем получать значение с Intent
@@ -1029,31 +723,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 !invite_code_ET3.getText().toString().equals("") &&
                 !invite_code_ET4.getText().toString().equals("") &&
                 !invite_code_ET5.getText().toString().equals("")){
-            Result_TV.setText("Проверяем ваш код...");
-            Result_TV.setTextColor(Color.parseColor("gray"));
-            btn_0.setClickable(false);
-            btn_9.setClickable(false);
-            btn_8.setClickable(false);
-            btn_7.setClickable(false);
-            btn_6.setClickable(false);
-            btn_5.setClickable(false);
-            btn_4.setClickable(false);
-            btn_3.setClickable(false);
-            btn_2.setClickable(false);
-            btn_1.setClickable(false);
-            btn_sbmt.setClickable(false);
-            btn_X.setClickable(false);
+            change_text(Result_TV, "black", "Проверяем ваш код...");
+            btn_able(false);
 
             get_code();
-            invite_code_ET.setText("");
-            invite_code_ET1.setText("");
-            invite_code_ET2.setText("");
-            invite_code_ET3.setText("");
-            invite_code_ET4.setText("");
-            invite_code_ET5.setText("");
+            code_del();
             loadProfile(invite_code);
         }
         }
+
+
+
     @Override
     public void onBackPressed() {
 
@@ -1159,9 +839,83 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onDestroy();
         if (cameraBridgeViewBase!=null){
             cameraBridgeViewBase.disableView();
+            mCountDownTimer.cancel();
         }
     }
 
+    private void btn_able(Boolean isEnabled){
+        if(!isEnabled) {
+            btn_0.setClickable(false);
+            btn_9.setClickable(false);
+            btn_8.setClickable(false);
+            btn_7.setClickable(false);
+            btn_6.setClickable(false);
+            btn_5.setClickable(false);
+            btn_4.setClickable(false);
+            btn_3.setClickable(false);
+            btn_2.setClickable(false);
+            btn_1.setClickable(false);
+            btn_sbmt.setClickable(false);
+            btn_X.setClickable(false);
+        }
+        else{
+            btn_0.setClickable(true);
+            btn_9.setClickable(true);
+            btn_8.setClickable(true);
+            btn_7.setClickable(true);
+            btn_6.setClickable(true);
+            btn_5.setClickable(true);
+            btn_4.setClickable(true);
+            btn_3.setClickable(true);
+            btn_2.setClickable(true);
+            btn_1.setClickable(true);
+            btn_sbmt.setClickable(true);
+            btn_X.setClickable(true);
+        }
+    }
+
+
+    private void code_del() {
+        invite_code_ET.setText("");
+        invite_code_ET1.setText("");
+        invite_code_ET2.setText("");
+        invite_code_ET3.setText("");
+        invite_code_ET4.setText("");
+        invite_code_ET5.setText("");
+    }
+
+    private void input_num(Button btn){
+        if(invite_code_ET.getText().toString().trim().matches("")){
+            invite_code_ET.setText(btn.getText().toString());
+            check_nums();
+
+        }
+        else if(invite_code_ET1.getText().toString().trim().matches("")){
+            invite_code_ET1.setText(btn.getText().toString());
+            check_nums();
+        }
+        else if(invite_code_ET2.getText().toString().trim().matches("")){
+            invite_code_ET2.setText(btn.getText().toString());check_nums();
+
+        }
+        else if(invite_code_ET3.getText().toString().trim().matches("")){
+            invite_code_ET3.setText(btn.getText().toString());
+            check_nums();
+        }
+        else if(invite_code_ET4.getText().toString().trim().matches("")){
+            invite_code_ET4.setText(btn.getText().toString());
+            check_nums();
+        }
+        else if(invite_code_ET5.getText().toString().trim().matches("")){
+            invite_code_ET5.setText(btn.getText().toString());
+            check_nums();
+        }
+    }
+
+    private void change_text(TextView textview, String color, String text){
+        textview.setTextColor(Color.parseColor(color));
+        textview.setText(text);
+    }
 
 
     }

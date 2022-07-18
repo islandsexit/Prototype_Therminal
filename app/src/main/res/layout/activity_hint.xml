@@ -6,42 +6,189 @@
     android:layout_height="match_parent"
     tools:context=".HintActivity">
 
-    <ImageView
-        android:id="@+id/hint_image"
-        android:layout_width="1920px"
-        android:layout_height="1200px"
-        android:src="@drawable/hintaccept1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <View
+        android:id="@+id/progress_first"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:layout_marginStart="63px"
+        android:background="@drawable/progress_orange"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_next"
-        style="@style/Widget.Material3.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/orange"
-        android:text="-->"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.884"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/hint_image"
-        app:layout_constraintVertical_bias="0.841" />
+    <View
+        android:id="@+id/progress_second"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:backgroundTint="#DBDBDB"
+        android:background="@drawable/progress_orange"
+        app:layout_constraintStart_toEndOf="@+id/progress_first"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_next2"
-        style="@style/Widget.Material3.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/progress_third"
+        android:layout_width="597px"
+        android:layout_height="51px"
+        android:backgroundTint="#DBDBDB"
+        android:background="@drawable/progress_orange"
+        app:layout_constraintStart_toEndOf="@+id/progress_second"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/rectangle_1"
+        android:layout_width="652px"
+        android:layout_height="320px"
+        android:layout_marginTop="60px"
+        android:layout_marginEnd="965px"
+        android:background="@drawable/rectanglr_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle_2" />
+
+    <View
+        android:id="@+id/rectangle_2"
+        android:layout_width="652px"
+        android:layout_height="320px"
+        android:layout_marginTop="243px"
+        android:layout_marginEnd="965px"
+        android:background="@drawable/rectanglr_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_first" />
+
+    <View
+        android:id="@+id/rectangle_4"
+        android:layout_width="652px"
+        android:layout_height="320px"
+        android:layout_marginTop="60px"
+        android:layout_marginEnd="250px"
+        android:background="@drawable/rectanglr_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle_2" />
+
+    <View
+        android:id="@+id/rectangle_3"
+        android:layout_width="652px"
+        android:layout_height="320px"
+        android:layout_marginTop="243px"
+        android:layout_marginEnd="250px"
+        android:background="@drawable/rectanglr_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_first" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/invite_code_style"
+        android:id="@+id/button_next"
+        android:layout_width="347px"
+        android:layout_height="124px"
+        android:layout_marginTop="53px"
+        android:layout_marginEnd="1531px"
+        android:fontFamily="@font/inter_extrabold"
+        android:letterSpacing="0"
+        android:text="Домой"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textFontWeight="900"
+        android:textSize="64px"
+        android:background="@color/orange"
         android:backgroundTint="@color/orange"
-        android:text="Закрыть"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_next"
-        app:layout_constraintTop_toTopOf="@+id/hint_image"
-        app:layout_constraintVertical_bias="0.843" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle_1" />
+
+    <ImageView
+        android:src="@drawable/error_1_card"
+        android:layout_width="166px"
+        android:layout_height="162px"
+        android:layout_marginTop="81px"
+        android:layout_marginEnd="66px"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_2"
+        app:layout_constraintTop_toTopOf="@+id/rectangle_2" />
+
+    <TextView
+        android:fontFamily="@font/inter_extrabold"
+        android:textFontWeight="400"
+        android:textSize="42px"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="Обратитесь         к оператору"
+        android:layout_width="338px"
+        android:layout_height="100px"
+        android:layout_marginStart="36px"
+        android:layout_marginBottom="114px"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_2"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_2" />
+
+
+    <ImageView
+        android:src="@drawable/error_2_card"
+        android:layout_width="166px"
+        android:layout_height="162px"
+        android:layout_marginTop="81px"
+        android:layout_marginEnd="66px"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_1"
+        app:layout_constraintTop_toTopOf="@+id/rectangle_1" />
+
+    <TextView
+        android:fontFamily="@font/inter_extrabold"
+        android:textFontWeight="400"
+        android:textSize="42px"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="Снимите очки/маску/головной убор"
+        android:layout_width="336px"
+        android:layout_height="153px"
+        android:layout_marginStart="36px"
+        android:layout_marginBottom="63px"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_1"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_1" />
+
+    <ImageView
+        android:src="@drawable/error_3_card"
+        android:layout_width="221px"
+        android:layout_height="220px"
+        android:layout_marginTop="50px"
+        android:layout_marginEnd="52px"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_3"
+        app:layout_constraintTop_toTopOf="@+id/rectangle_3" />
+
+    <TextView
+        android:layout_width="357px"
+        android:layout_height="154px"
+        android:layout_marginStart="22px"
+        android:layout_marginBottom="83px"
+        android:fontFamily="@font/inter_extrabold"
+        android:text="Пройдите регистрацию      на сайте"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textFontWeight="400"
+        android:textSize="42px"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_3"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_3" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="1182px"
+        android:layout_height="95px"
+        android:layout_marginTop="47px"
+        android:fontFamily="@font/inter_extrabold"
+        android:text="Не удалось распознать лицо!"
+        android:textAlignment="center"
+        android:textColor="#FF0909"
+        android:textFontWeight="800"
+        android:textSize="75px"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_second" />
+
+    <TextView
+        android:layout_width="713px"
+        android:layout_height="87px"
+        android:fontFamily="@font/inter_extrabold"
+        android:text="Варианты решения:"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textFontWeight="500"
+        android:textSize="60px"
+        app:layout_constraintBottom_toTopOf="@+id/rectangle_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
