@@ -45,11 +45,14 @@ import java.util.UUID;
 
 public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
+    private boolean debug = MainActivity.debag;
+
     public static final String APP_TAG = "retrofit-json-variable";
     public static final String LOG_TAG = "Camera";
     public static final String FACE_TAG = "FACE_DETECTION";
 
     private TextureView camera_view = null;
+
 
     private String name;
     private String id;
@@ -112,6 +115,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     boolean isPaused;
 
     Handler collapseNotificationHandler;
+
 
 
     public void collapseNow() {
@@ -396,9 +400,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         try{
-            if(cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
+            if(  cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
 
-                if (!cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                if (!debug && cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -411,10 +415,6 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                             }
                             else{
                                 //todo error page
-                                RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
-                                cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
-                                cameraBridgeViewBase.disableView();
-                                cameraBridgeViewBase.setVisibility(View.INVISIBLE);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -503,22 +503,9 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         for (int i = 0; i < facesArray.length; i++) {
 
 
-            Log.i("MainActivity.this", "y:"+facesArray[0].y);
-//            Log.i("MainActivity.this", "w:"+facesArray[0].width);
-//            Log.i("MainActivity.this", "h:"+facesArray[0].height);
-            Log.i("MainActivity.this", "x:"+facesArray[0].x);
-//            Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(255,0,94,0), 20);
-//            if(950>facesArray[i].x && facesArray[i].x>250 && facesArray[i].x+facesArray[i].width <1000&& 160>facesArray[i].y && facesArray[i].y>90){
-////                runOnUiThread(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        RESULT_TV.setText("Выполняется сканирование");
-////                    }
-////                });
-//                Imgproc.circle(mRgba, new Point(640,360), 350, new Scalar(0,255,94,0), 20);
-            Log.e(TAG, "face detected!");
             count++;
             if (can_take_photo) {
+                Log.i("Count", String.valueOf(count));
                 switch (count) {
                     case 30:
                         Log.i(TAG, "toast wait---------------------------------------------------------------------------------------------------");
@@ -548,7 +535,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                         break;
 
 
-                    case 100:
+                    case 60:
 
                         cameraBridgeViewBase.setFace_array(facesArray);
                         String uuid = UUID.randomUUID().toString() + ".png";
@@ -569,43 +556,6 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
 
                         count = 0;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                RESULT_TV.setText((cameraBridgeViewBase.POST.RESULT_FROM_POST));
-                                cameraBridgeViewBase.POST.setRESULT_FROM_POST(null);
-                                progress_third.setBackgroundColor(Color.parseColor("#DBDBDB"));
-                                cameraBridgeViewBase.disableView();
-                                cameraBridgeViewBase.setVisibility(View.INVISIBLE);
-                                //img_done.setVisibility(View.VISIBLE);
-
-                                btn_done.setVisibility(View.VISIBLE);
-                                btn_home.setVisibility(View.GONE);
-                                fill_white.setVisibility(View.VISIBLE);
-                                img_done.setVisibility(View.VISIBLE);
-                                progress_third_orange.setVisibility(View.VISIBLE);
-//                    TV_SUCCESS.setVisibility(View.VISIBLE);
-//                    TV_SUCCESS.setText("Спасибо ваш пропуск успешно создался");
-
-
-                                mCountDownTimer.cancel();
-                                mCountDownTimer2.cancel();
-                                RESULT_TV.setVisibility(View.GONE);
-                                btn_success.setVisibility(View.VISIBLE);
-                                mCountDownTimer3 = new CountDownTimer(50000L, 1000L){
-
-                                    @Override
-                                    public void onTick(long l) {
-
-                                    }
-
-                                    @Override
-                                    public void onFinish() {
-                                        goNewView();
-                                    }
-                                }.start();
-                            }
-                        });
 
                         //RESULT_TV.setText("Фото сделано");
                         break;
@@ -674,49 +624,6 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
         }
     }
-    public static Bitmap rotateBitmap(Bitmap srcBitmap, String path) {
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(0));
-        Matrix matrix = new Matrix();
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.postRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.postRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.postRotate(270);
-                break;
-            default:
-                break;
-        }
-        Bitmap destBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(),
-                srcBitmap.getHeight(), matrix, true);
-        return destBitmap;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

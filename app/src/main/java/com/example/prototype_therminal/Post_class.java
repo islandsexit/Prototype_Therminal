@@ -37,12 +37,6 @@ public class Post_class {
 
         POST_API post_api = retrofit.create(POST_API.class);
 
-        if(debag){
-            ID = "88";
-            name = "ProCOFFEe";
-
-        }
-
         Call<POST_PHOTO> call = post_api.Post_img64(ID, img64, name);
         Log.e("POST", "img64:"+img64.charAt(2)+" id= "+ID+" name: "+name);
         call.enqueue(new Callback<POST_PHOTO>() {

@@ -136,10 +136,11 @@ public class myCameraView extends JavaCameraView implements PictureCallback {
                     bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
                 }
             }catch (Exception e ){
+                Log.i("Size bm", String.valueOf(bm.getHeight())+" "+String.valueOf(bm.getWidth()));
                 bm = Bitmap.createBitmap(bm,face_array[0].x, face_array[0].y, face_array[0].width, face_array[0].height );
             }
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String URL = sp.getString("ippost", "");
+            String URL = sp.getString("ippost", "http://192.168.48.50:5000");
             File mFile3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), UUID.randomUUID().toString()+"_"+".jpg");
             FileOutputStream fos2 = null;
             fos2 = new FileOutputStream(mFile3);

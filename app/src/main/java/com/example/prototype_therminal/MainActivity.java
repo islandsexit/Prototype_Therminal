@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.prototype_therminal.data.GET_API;
 import com.example.prototype_therminal.model.GET_CODE;
+import com.example.prototype_therminal.serversocket.ServerThread;
 import com.google.gson.GsonBuilder;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -42,15 +43,22 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,10 +68,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
+    public static final Boolean debag = true;
+
     public static final String APP_TAG = "retrofit-json-variable";
     private static String BASE_URL = "";
 
-    CameraBridgeViewBase cameraBridgeViewBase;
+
+
+    myCameraView cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
     private static final String    TAG                 = "OCVSample::Activity";
     private static final Scalar FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
@@ -82,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private EditText invite_code_ET4;
     private EditText invite_code_ET5;
 
-    Handler screen = new Handler();
     private static final long TIMER_DURATION = 60000L;
     private static final long TIMER_INTERVAL = 1000L;
 
@@ -115,10 +126,16 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private String name_txt;
     private String id_txt;
     private TextView Result_TV;
-    private Boolean debag = false;
+
     // To keep track of activity's window focus
     boolean currentFocus;
     private Button btn_hint;
+
+    private ServerSocket serverSocket;
+
+    Handler updateConversationHandler;
+
+    Thread serverThread = null;
 
 
     // To keep track of activity's foreground/background status
@@ -229,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         if (checkSelfPermission(
                 Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, 2);
+            requestPermissions(new String[]{Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION, Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 2);
         }
         SETTINGS = findViewById(R.id.SETTINGS);
         btn_hint_icon = findViewById(R.id.hint_icon);
@@ -237,6 +254,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         BASE_URL = sp.getString("ipget", "");
         hint_view = findViewById(R.id.hint_view);
         hint_view.setVisibility(View.GONE);
+
+
+        updateConversationHandler = new Handler();
+
+        this.serverThread = new Thread(new ServerThread());
+        this.serverThread.start();
 
 
         mCountDownTimer = new CountDownTimer(TIMER_DURATION, TIMER_INTERVAL) {
@@ -254,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             }
         }.start();
 
-        cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.javaCameraView);
+        cameraBridgeViewBase = (myCameraView) findViewById(R.id.javaCameraView);
 //        cameraBridgeViewBase.setVisibility(View.VISIBLE);
         cameraBridgeViewBase.setCameraIndex(1);
         cameraBridgeViewBase.setCvCameraViewListener(MainActivity.this);
@@ -596,7 +619,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     private void loadProfile(String invite_code) {
         change_text(Result_TV, "green", "Спасибо");
-        goNewView();//todo delete
 
 
 
@@ -648,9 +670,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                             }
 
                         });
-                        if (RESULT.equals("SUCCESS")){
-                            goNewView();
-                        }
                     } else {
                         Log.e(APP_TAG, "onResponse | status: " + statusCode);
                         runOnUiThread(()-> {
@@ -777,6 +796,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         if(cameraBridgeViewBase!=null){
 
             cameraBridgeViewBase.disableView();
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -916,6 +940,113 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         textview.setTextColor(Color.parseColor(color));
         textview.setText(text);
     }
+
+
+    class ServerThread implements Runnable {
+        public static final int SERVERPORT = 6000;
+        public void run() {
+            Socket socket = null;
+            try {
+                serverSocket = new ServerSocket(SERVERPORT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while (!Thread.currentThread().isInterrupted()) {
+
+                try {
+
+                    socket = serverSocket.accept();
+
+                    CommunicationThread commThread = new CommunicationThread(socket);
+                    new Thread(commThread).start();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class CommunicationThread implements Runnable {
+
+        private Socket clientSocket;
+        public ArrayList<String> list = new ArrayList<String>();
+        private BufferedReader input;
+
+        public CommunicationThread(Socket clientSocket) {
+
+            this.clientSocket = clientSocket;
+
+            try {
+
+                this.input = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void run() {
+            list.clear();
+            while (!Thread.currentThread().isInterrupted()) {
+
+                try {
+                    String read = input.readLine();
+                    list.add(read);
+                    if(read.length() == 0){
+                        break;
+                    }
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cameraBridgeViewBase.setId(0);
+                        cameraBridgeViewBase.setName("0");
+                        cameraBridgeViewBase.setFace_array(new Rect[]{new Rect(0,0,1280,720)});
+                        cameraBridgeViewBase.takePicture(UUID.randomUUID().toString() + ".png");
+                    }
+                });
+
+                String OUTPUT = "<html><head><title>Example</title></head><body><p>Worked!!!</p></body></html>";
+                String OUTPUT_HEADERS = "HTTP/1.1 200 OK\r\n" +
+                        "Content-Type: text/html\r\n" +
+                        "Content-Length: ";
+                String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
+
+                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+                out.writeBytes(OUTPUT_HEADERS+ OUTPUT.length()+OUTPUT_END_OF_HEADERS);
+                out.writeBytes(OUTPUT);
+                out.close();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+//    class updateUIThread implements Runnable {
+//        private String msg;
+//
+//        public updateUIThread(String str) {
+//            this.msg = str;
+//        }
+//
+//        @Override
+//        public void run() {
+//            runOnUiThread(new updateUIThread());
+//            // Говорим между какими Activity будет происходить связь
+//
+//        }
+//    }
 
 
     }
