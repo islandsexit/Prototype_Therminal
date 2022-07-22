@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.example.prototype_therminal.myCameraView
+        <com.example.prototype_therminal.SocketCameraView
             android:id="@+id/javaCameraView"
             android:layout_width="94dp"
             android:layout_height="82dp"

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
 
 
-    myCameraView cameraBridgeViewBase;
+    SocketCameraView cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
     private static final String    TAG                 = "OCVSample::Activity";
     private static final Scalar FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             }
         }.start();
 
-        cameraBridgeViewBase = (myCameraView) findViewById(R.id.javaCameraView);
+        cameraBridgeViewBase = (SocketCameraView) findViewById(R.id.javaCameraView);
 //        cameraBridgeViewBase.setVisibility(View.VISIBLE);
         cameraBridgeViewBase.setCameraIndex(1);
         cameraBridgeViewBase.setCvCameraViewListener(MainActivity.this);
@@ -799,6 +799,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         }
         try {
             serverSocket.close();
+            this.serverThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -976,6 +977,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         public CommunicationThread(Socket clientSocket) {
 
             this.clientSocket = clientSocket;
+            cameraBridgeViewBase.clientSocket = clientSocket;
 
             try {
 
@@ -1003,32 +1005,30 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     e.printStackTrace();
                 }
             }
-            try {
+//            try {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        cameraBridgeViewBase.setId(0);
-                        cameraBridgeViewBase.setName("0");
-                        cameraBridgeViewBase.setFace_array(new Rect[]{new Rect(0,0,1280,720)});
                         cameraBridgeViewBase.takePicture(UUID.randomUUID().toString() + ".png");
+
                     }
                 });
 
-                String OUTPUT = "<html><head><title>Example</title></head><body><p>Worked!!!</p></body></html>";
-                String OUTPUT_HEADERS = "HTTP/1.1 200 OK\r\n" +
-                        "Content-Type: text/html\r\n" +
-                        "Content-Length: ";
-                String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
-
-                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-                out.writeBytes(OUTPUT_HEADERS+ OUTPUT.length()+OUTPUT_END_OF_HEADERS);
-                out.writeBytes(OUTPUT);
-                out.close();
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//                String OUTPUT = "<html><head><title>Example</title></head><body><p>Worked!!!</p></body></html>";
+//                String OUTPUT_HEADERS = "HTTP/1.1 200 OK\r\n" +
+//                        "Content-Type: text/html\r\n" +
+//                        "Content-Length: ";
+//                String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
+//
+//                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+//                out.writeBytes(OUTPUT_HEADERS+ OUTPUT.length()+OUTPUT_END_OF_HEADERS);
+//                out.writeBytes(OUTPUT);
+//                out.close();
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
 
     }
