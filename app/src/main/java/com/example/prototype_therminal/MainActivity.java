@@ -68,7 +68,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
-    public static final Boolean debag = true;
+    public static final Boolean debag = false;
 
     public static final String APP_TAG = "retrofit-json-variable";
     private static String BASE_URL = "";
@@ -635,7 +635,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 .build();
 
         GET_API GETApi = retrofit.create(GET_API.class);
-        Call<GET_CODE> call = GETApi.Check_code(invite_code, "secretmasterpasswordvig");
+        Call<GET_CODE> call = GETApi.Check_code(invite_code);
         call.enqueue(new Callback<GET_CODE>() {
             @Override
             public void onResponse(Call<GET_CODE> call, Response<GET_CODE> response) {
@@ -654,6 +654,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                                 name_txt = name;
                                 id_txt = id;
                                 change_text(Result_TV, "green", "Спасибо");
+                                goNewView();
 
                             }
                             else {
@@ -944,7 +945,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
 
     class ServerThread implements Runnable {
-        public static final int SERVERPORT = 6000;
+        public static final int SERVERPORT = 1234;
         public void run() {
             Socket socket = null;
             try {
@@ -1005,7 +1006,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     e.printStackTrace();
                 }
             }
-//            try {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1013,22 +1013,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
                     }
                 });
-
-//                String OUTPUT = "<html><head><title>Example</title></head><body><p>Worked!!!</p></body></html>";
-//                String OUTPUT_HEADERS = "HTTP/1.1 200 OK\r\n" +
-//                        "Content-Type: text/html\r\n" +
-//                        "Content-Length: ";
-//                String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
-//
-//                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-//                out.writeBytes(OUTPUT_HEADERS+ OUTPUT.length()+OUTPUT_END_OF_HEADERS);
-//                out.writeBytes(OUTPUT);
-//                out.close();
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
 
     }

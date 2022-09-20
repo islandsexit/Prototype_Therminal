@@ -10,9 +10,9 @@ import retrofit2.http.POST;
 public interface POST_API {
 
     @FormUrlEncoded
-    @POST("docreateguest")
+    @POST("addPerson")
 //    @POST(" /t/x6f1l-1650729514/post")
-    Call<POST_PHOTO> Post_img64(@Field("ID") String ID, @Field("img64") String img64, @Field("name") String name);
+    Call<POST_PHOTO> Post_img64(@Field("id") String ID, @Field("img64") String img64, @Field("name") String name);
 
 
 

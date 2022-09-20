@@ -1,11 +1,14 @@
 package com.example.prototype_therminal.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GET_CODE {
         private String RESULT;
         private String name;
+        @SerializedName("id")
         private String code;
 
         public GET_CODE() {

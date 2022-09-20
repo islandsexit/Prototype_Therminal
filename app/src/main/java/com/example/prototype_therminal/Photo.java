@@ -402,7 +402,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
         try{
             if(  cameraBridgeViewBase.POST.RESULT_FROM_POST !=null && cameraBridgeViewBase.photo_taken){
 
-                if (!debug && cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
+                if (cameraBridgeViewBase.POST.RESULT_FROM_POST.equals("ERROR")){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -455,7 +455,7 @@ public class Photo extends AppCompatActivity implements CameraBridgeViewBase.CvC
                     mCountDownTimer2.cancel();
                     RESULT_TV.setVisibility(View.GONE);
                     btn_success.setVisibility(View.VISIBLE);
-                    mCountDownTimer3 = new CountDownTimer(50000L, 1000L){
+                    mCountDownTimer3 = new CountDownTimer(5000L, 1000L){
 
                         @Override
                         public void onTick(long l) {

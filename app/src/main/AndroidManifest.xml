@@ -3,10 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.prototype_therminal">
 
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CAMERA2" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -27,19 +29,19 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".success"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="landscape" />
         <activity
             android:name=".Dettings"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="landscape" />
         <activity
             android:name=".HintActivity"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="landscape" />
         <activity
             android:name=".ErrorPage"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="landscape" />
         <activity
             android:name=".ScreenSaver"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="landscape" />
         <activity
             android:name=".Photo"
             android:exported="false"

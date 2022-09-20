@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +22,7 @@ public class ErrorPage extends AppCompatActivity {
     private ImageView img_error;
     private int count;
     private String tel;
-
+    private TextView tv_ip;
     private TextView TV_TEl;
 
     @Override
@@ -29,6 +32,7 @@ public class ErrorPage extends AppCompatActivity {
         btn_next = findViewById(R.id.button_next);
         btn_previous = findViewById(R.id.button_next2);
         btn_previous.setVisibility(View.INVISIBLE);
+        tv_ip = findViewById(R.id.IP_TV);
         img_error = findViewById(R.id.errorimage);
         count=0;
         TV_TEl = findViewById(R.id.TV_TEL);

@@ -3,9 +3,12 @@ package com.example.prototype_therminal;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +23,7 @@ public class Dettings extends AppCompatActivity {
 
     private Button BTN_SAVE;
     private Button BTN_HOME;
-
+    private TextView TV_IP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +37,16 @@ public class Dettings extends AppCompatActivity {
         ET_IPPOST = findViewById(R.id.ET_IPPOST);
         BTN_HOME = findViewById(R.id.BTN_HOME);
         ET_TEL = findViewById(R.id.telephone);
+        TV_IP = findViewById(R.id.IP_TV);
 
         String where = sp.getString("where", "Подъезд номер ");
         String ipget = sp.getString("ipget", "http://192.168.48.131:8000/");
         String ippost = sp.getString("ippost", "http://192.168.48.144:8080");
         String tel = sp.getString("tel", "+7");
+        WifiManager wm = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
+        TV_IP.setText(ip);
         ET_IPPOST.setText( ippost, TextView.BufferType.EDITABLE);
         ET_WHERE.setText( where, TextView.BufferType.EDITABLE);
         ET_IPGET.setText( ipget, TextView.BufferType.EDITABLE);
